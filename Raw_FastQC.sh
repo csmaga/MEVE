@@ -22,11 +22,10 @@ ml multiqc/1.11-GCCcore-8.3.0-Python-3.8.2
 cd $OD
 
 # Create a for loop that goes into each directory, using the wildcard *, and prints the name of the directoy, then runs FastQC on each .gz file in that directory using 6 cores, then prints "Done"
-for dir in $DD/*; do
-  cd dir
-  echo "$dir"
-  fastqc -o $OD -t 6 *.gz
-  echo "$dir done"
+for file in $DD/*/*.gz; do
+  echo "$file"
+  fastqc -o $OD -t 6
+  echo "$file done"
 done
 
 # Use multiQC to put all QC reports together into one .html file
