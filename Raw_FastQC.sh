@@ -24,7 +24,7 @@ cd $OD
 # Create a for loop that goes into each directory, using the wildcard *, and prints the name of the directoy, then runs FastQC on each .gz file in that directory using 6 cores, then prints "Done"
 for file in $DD/*/*.gz; do
   echo "$file"
-  fastqc -o $OD -t 6
+  fastqc -o $OD -t 6 $file
   echo "$file done"
 done
 
