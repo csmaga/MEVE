@@ -3,9 +3,9 @@
 #SBATCH --mail-user=christopher.smaga@uga.edu
 #SBATCH --mail-type=END,FAIL
 #SBATCH --job-name=MEVE_trimming
-#SBATCH --nodes=6
+#SBATCH --nodes=4
 #SBATCH --ntasks-per-node=1
-#SBATCH --mem=120G
+#SBATCH --mem=80G
 #SBATCH --time=48:00:00
 #SBATCH --output=/scratch/crs12448/MEVE/logs/trim.o
 #SBATCH --error=/scratch/crs12448/MEVE/logs/trim.e
@@ -27,7 +27,7 @@ cd $DD
 for dir in $DD; do
   echo "Starting $dir"
   cd $dir
-  trim_galore --cores 6 --fastqc --fastqc_args "--outdir $QC_OD" -stringency 3 -o $Trim_OD --paired  *_1.fq.gz *_2.fq.gz
+  trim_galore --cores 4 --fastqc --fastqc_args "--outdir $QC_OD" -stringency 3 -o $Trim_OD --paired  *_1.fq.gz *_2.fq.gz
   echo "Trimming of $dir finished."
 done
 
