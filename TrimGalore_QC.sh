@@ -7,8 +7,8 @@
 #SBATCH --ntasks-per-node=1
 #SBATCH --mem=80G
 #SBATCH --time=48:00:00
-#SBATCH --output=/scratch/crs12448/MEVE/logs/trim.o
-#SBATCH --error=/scratch/crs12448/MEVE/logs/trim.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/trim.o
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/trim.e
 
 
 DD="/scratch/crs12448/MEVE/Data/Raw"
