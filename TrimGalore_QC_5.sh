@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --partition=bash
+#SBATCH --partition=batch
 #SBATCH --mail-user=christopher.smaga@uga.edu
 #SBATCH --mail-type=END,FAIL
 #SBATCH --job-name=MEVE_trimming_5
