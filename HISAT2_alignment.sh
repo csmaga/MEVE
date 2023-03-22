@@ -62,7 +62,7 @@ head -n 10 Amiss.ref_intron.bed
 
 module load HISAT2/2.2.1-foss-2019b
 # # Build index genome using splice sites and exon files created above
-hisat2-build -p 10 --ss /scratch/crs12448/MEVE/Alignment/Genome_Index/Amiss.ref_intron.bed --exon /scratch/crs12448/MEVE/Alignment/Genome_Index/Amiss.ref_exon_merged.bed -f /home/crs12448/ALL_METH_PROJ/Amiss.ref.2022.fna /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Index/Amiss.index.ref.hisat2
+hisat2-build -p 10 --ss /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Amiss.ref_intron.bed --exon /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Amiss.ref_exon_merged.bed -f /home/crs12448/ALL_METH_PROJ/Amiss.ref.2022.fna /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Index/Amiss.index.ref.hisat2
 
 # For each file (S### is prefix), align the two reads resulting from that sample. Output file is SAM format.
 cd $DD 
