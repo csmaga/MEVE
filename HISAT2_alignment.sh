@@ -52,7 +52,7 @@ sortBed -i Amiss.ref_gene.bed > Amiss.ref_gene_temp.bed
 #Rename
 mv -f Amiss.ref_gene_temp.bed Amiss.ref_gene.bed
 echo "Amiss.ref_gene.bed"
-head -n 10 Amiss.ref.gene.bed
+head -n 10 Amiss.ref_gene.bed
 
 # Subtract exons from gene coordinates to get introns 
 subtractBed -a Amiss.ref_gene.bed -b Amiss.ref_exon_merged.bed > Amiss.ref_intron.bed
@@ -62,7 +62,7 @@ head -n 10 Amiss.ref_intron.bed
 
 module load HISAT2/2.2.1-foss-2019b
 # # Build index genome using splice sites and exon files created above
-hisat2-build -p 10 --ss /scratch/crs12448/MEVE/Alignment/Genome_Index/Amiss.ref_intron.bed --exon /scratch/crs12448/MEVE/Alignment/Genome_Index/Amiss.ref_exon_merged.bed -f /home/crs12448/ALL_METH_PROJ/Amiss.ref.2022.fna /scratch/crs12448/MEVE/Alignment/Genome_Index/Index/Amiss.index.ref.hisat2
+hisat2-build -p 10 --ss /scratch/crs12448/MEVE/Alignment/Genome_Index/Amiss.ref_intron.bed --exon /scratch/crs12448/MEVE/Alignment/Genome_Index/Amiss.ref_exon_merged.bed -f /home/crs12448/ALL_METH_PROJ/Amiss.ref.2022.fna /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Index/Amiss.index.ref.hisat2
 
 # For each file (S### is prefix), align the two reads resulting from that sample. Output file is SAM format.
 cd $DD 
