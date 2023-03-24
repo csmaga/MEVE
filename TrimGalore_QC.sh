@@ -12,7 +12,7 @@
 
 
 # DD="/scratch/crs12448/MEVE/Data/Raw"
-# QC_OD="/scratch/crs12448/MEVE/QC/Trimmed_QC"
+QC_OD="/scratch/crs12448/MEVE/QC/Trimmed_QC"
 # Trim_OD="/scratch/crs12448/MEVE/Trimming/Trimmed_reads"
 
 
@@ -36,4 +36,3 @@ module load MultiQC/1.8-foss-2019b-Python-3.7.4
 
 cd $QC_OD
 multiqc /scratch/crs12448/MEVE/QC/Trimmed_QC
-
