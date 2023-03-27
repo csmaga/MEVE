@@ -25,11 +25,12 @@ cd $DD
 # Create a for loop that goes into each directory, prints that directory, then does trimming on the two reads in that directory and fastqc, outputing fastqc results into QC_DD and trimmed reads into Trim_OD
 # Trim adapter sequences from fastq files, setting strigency to 3 (only trimmed if at least 3 bases match adaptor sequence), which is what was used for STIM2014, SLB's work, and PREE2. 
 
-for dir in S406 S407 S408 S416 S420; do
+for dir in S263 S231 S316 S246	S432; do
   echo "Starting $dir"
   cd $dir
   trim_galore --cores 4 --fastqc --fastqc_args "--outdir $QC_OD" -stringency 3 -o $Trim_OD --paired  *_1.fq.gz *_2.fq.gz
   echo "Trimming of $dir finished."
+  cd $DD
 done
 
 
