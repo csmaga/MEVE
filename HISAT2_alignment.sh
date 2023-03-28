@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=10	                            # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=250gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/scratch/crs12448/MEVE/Logs/HISAT2.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/HISAT2.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/HISAT2_extra.o    # Standard output and error log - # replace cbergman with your myid
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/HISAT2_extra.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
@@ -65,19 +65,36 @@ module load HISAT2/2.2.1-foss-2019b
 #hisat2-build -p 10 --ss /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Amiss.ref_intron.bed --exon /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Amiss.ref_exon_merged.bed -f /home/crs12448/ALL_METH_PROJ/Amiss.ref.2022.fna /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Index/Amiss.index.ref.hisat2
 
 # For each file (S### is prefix), align the two reads resulting from that sample. Output file is SAM format.
+# cd $DD 
+# for file in  S392 S319	S280 S249 S388 S337	S343 S359 S391 S302	S263 S231 S316 S246	S432 S376 S406 S317	S266_2 S247 S393 S295 S344 S256_2
+# do
+#     echo "Working on $file."
+#     hisat2 -x /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Index/Amiss.index.ref.hisat2  -p 10 --rna-strandness FR --dta -q -1 $DD/${file}_1_val_1.fq.gz -2 $DD/${file}_2_val_2.fq.gz -S /scratch/crs12448/MEVE/Alignment/HISAT2/SAM/${file}.sam --summary-file /scratch/crs12448/MEVE/Alignment/HISAT2/HISAT2_alignment_summary
+#     echo "$file finished."
+# done
+
+# For each file (S### is prefix), align the two reads resulting from that sample. Output file is SAM format. These two samples were left out of the orignal alignment (extra)
 cd $DD 
-for file in  S392 S319	S280 S249 S388 S337	S343 S359 S391 S302	S263 S231 S316 S246	S432 S376 S406 S317	S266_2 S247 S393 S295 S344 S256_2
+for file in S242 S252
 do
     echo "Working on $file."
     hisat2 -x /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Index/Amiss.index.ref.hisat2  -p 10 --rna-strandness FR --dta -q -1 $DD/${file}_1_val_1.fq.gz -2 $DD/${file}_2_val_2.fq.gz -S /scratch/crs12448/MEVE/Alignment/HISAT2/SAM/${file}.sam --summary-file /scratch/crs12448/MEVE/Alignment/HISAT2/HISAT2_alignment_summary
     echo "$file finished."
 done
-
 #########################################################################################################################################
 
 # Sort the SAM alignment files and convert to BAM format
+# ml SAMtools/1.14-GCC-8.3.0
+# for i in  S392 S319	S280 S242 S252 S388 S337 S359 S391 S302	S263 S231 S316 S246	S432 S376 S406 S317	S266_2 S247 S393 S295 S344 S256_2
+# do
+# echo "Working on $i."
+# samtools sort -@ 10 /scratch/crs12448/MEVE/Alignment/HISAT2/SAM/${i}.sam -o /scratch/crs12448/MEVE/Alignment/HISAT2/BAM/${i}.bam 
+# echo "$i finished."
+# done
+
+# Sort the SAM alignment files and convert to BAM format
 ml SAMtools/1.14-GCC-8.3.0
-for i in  S392 S319	S280 S249 S388 S337	S343 S359 S391 S302	S263 S231 S316 S246	S432 S376 S406 S317	S266_2 S247 S393 S295 S344 S256_2
+for i in  S242 S252
 do
 echo "Working on $i."
 samtools sort -@ 10 /scratch/crs12448/MEVE/Alignment/HISAT2/SAM/${i}.sam -o /scratch/crs12448/MEVE/Alignment/HISAT2/BAM/${i}.bam 
