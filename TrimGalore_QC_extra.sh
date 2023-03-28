@@ -2,13 +2,13 @@
 #SBATCH --partition=batch
 #SBATCH --mail-user=christopher.smaga@uga.edu
 #SBATCH --mail-type=END,FAIL
-#SBATCH --job-name=MEVE_trimming_5
+#SBATCH --job-name=MEVE_trimming_extra
 #SBATCH --nodes=1
 #SBATCH --ntasks-per-node=4
 #SBATCH --mem=24G
 #SBATCH --time=48:00:00
-#SBATCH --output=/scratch/crs12448/MEVE/Logs/trim_5.o
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/trim_5.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/trim_extra.o
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/trim_extra.e
 
 
 
