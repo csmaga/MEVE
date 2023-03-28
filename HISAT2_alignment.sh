@@ -78,7 +78,7 @@ cd $DD
 for file in S242 S252
 do
     echo "Working on $file."
-    hisat2 -x /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Index/Amiss.index.ref.hisat2  -p 10 --rna-strandness FR --dta -q -1 $DD/${file}_1_val_1.fq.gz -2 $DD/${file}_2_val_2.fq.gz -S /scratch/crs12448/MEVE/Alignment/HISAT2/SAM/${file}.sam --summary-file /scratch/crs12448/MEVE/Alignment/HISAT2/HISAT2_alignment_summary
+    hisat2 -x /scratch/crs12448/MEVE/Alignment/HISAT2/Genome_Index/Index/Amiss.index.ref.hisat2  -p 10 --rna-strandness FR --dta -q -1 $DD/${file}_1_val_1.fq.gz -2 $DD/${file}_2_val_2.fq.gz -S /scratch/crs12448/MEVE/Alignment/HISAT2/SAM/${file}.sam 
     echo "$file finished."
 done
 #########################################################################################################################################
