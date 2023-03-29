@@ -2,8 +2,8 @@
 #SBATCH --job-name=GATK_SNP                 # Job name
 #SBATCH --partition=batch	                            # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
-#SBATCH --cpus-per-task=4                            # Number of cores per task - match this to the num_threads used by BLAST
-#SBATCH --mem=20gb			                                # Total memory for job
+#SBATCH --cpus-per-task=8                           # Number of cores per task - match this to the num_threads used by BLAST
+#SBATCH --mem=48gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_prep.o    # Standard output and error log - # replace cbergman with your myid
 #SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_prep.e
@@ -23,10 +23,10 @@ ml  GATK/4.3.0.0-GCCcore-8.3.0-Java-1.8
 cd $DD
 for i in *.bam;
 do
-gatk --java-options "-Xmx20G -XX:+UseParallelGC -XX:ParallelGCThreads=4" MarkDuplicates \
+gatk --java-options "-Xmx48G -XX:+UseParallelGC -XX:ParallelGCThreads=8" MarkDuplicates \
       I=$i \
-      O=${i/.bam/}_mark_dup.bam \
-      M=${i}_mark_dup_metrics.txt
+      O=$OD/${i/.bam/}_mark_dup.bam \
+      M=$OD/${i.bam/}_mark_dup_metrics.txt
 done
 
 ############################################################################################################################################3
@@ -42,3 +42,13 @@ do
       -I $i \
       -O $OD_2/${i/_mark_dup.bam/_cigar.bam}
 done
+
+############################################################################################################################################
+
+# Recalibrate base quality score
+ gatk BaseRecalibrator \
+   -I my_reads.bam \
+   -R reference.fasta \
+   --known-sites sites_of_variation.vcf \
+   --known-sites another/optional/setOfSitesToMask.vcf \
+   -O recal_data.table
