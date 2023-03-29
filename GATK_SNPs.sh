@@ -2,11 +2,11 @@
 #SBATCH --job-name=GATK_SNP                 # Job name
 #SBATCH --partition=batch	                            # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
-#SBATCH --cpus-per-task=6	                            # Number of cores per task - match this to the num_threads used by BLAST
-#SBATCH --mem=30gb			                                # Total memory for job
+#SBATCH --cpus-per-task=4                            # Number of cores per task - match this to the num_threads used by BLAST
+#SBATCH --mem=20gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_prep.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATL_prep.e
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_prep.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
@@ -23,8 +23,8 @@ ml  GATK/4.3.0.0-GCCcore-8.3.0-Java-1.8
 cd $DD
 for i in *.bam;
 do
-gatk --java-options "-Xmx30G -XX:+UseParallelGC -XX:ParallelGCThreads=6" MarkDuplicates \
-      I=$i.bam \
+gatk --java-options "-Xmx20G -XX:+UseParallelGC -XX:ParallelGCThreads=4" MarkDuplicates \
+      I=$i \
       O=${i/.bam/}_mark_dup.bam \
       M=${i}_mark_dup_metrics.txt
 done
