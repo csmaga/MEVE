@@ -25,8 +25,8 @@ for i in *.bam;
 do
 gatk --java-options "-Xmx64G -XX:+UseParallelGC -XX:ParallelGCThreads=8" MarkDuplicates \
       I=$i \
-      O=$OD/${i/.bam/}_mark_dup.bam \
-      M=$OD/${i.bam/}_mark_dup_metrics.txt
+      O=$OD/${i/.bam/_mark_dup.bam} \
+      M=$OD/${i/.bam/_mark_dup_metrics.txt}
 done
 
 ############################################################################################################################################3
