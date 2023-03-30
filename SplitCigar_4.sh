@@ -1,3 +1,4 @@
+#!/bin/bash
 #SBATCH --job-name=GATK_SNP                 # Job name
 #SBATCH --partition=batch	                            # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
