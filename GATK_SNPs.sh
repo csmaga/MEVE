@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=8                           # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=64gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_prep.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_prep.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_cigar.o    # Standard output and error log - # replace cbergman with your myid
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_cigar.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
