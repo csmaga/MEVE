@@ -38,7 +38,7 @@ OD_2="/scratch/crs12448/MEVE/GATK/SplitNCigarReads"
  for i in *.bam;
  do
   gatk SplitNCigarReads \
-       -R /scratch/crs12448/MEVE/Genome/ \
+       -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
        -I $i \
        -O $OD_2/${i/_mark_dup.bam/_cigar.bam}
  done
