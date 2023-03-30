@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=GATK_SNP                 # Job name
-#SBATCH --partition=highmem_p	                            # Partition (queue) name
+#SBATCH --partition=batch	                            # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
-#SBATCH --cpus-per-task=10                           # Number of cores per task - match this to the num_threads used by BLAST
-#SBATCH --mem=120gb			                                # Total memory for job
+#SBATCH --cpus-per-task=1                          # Number of cores per task - match this to the num_threads used by BLAST
+#SBATCH --mem=12gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_cigar.o    # Standard output and error log - # replace cbergman with your myid
 #SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_cigar.e
@@ -19,7 +19,7 @@ OD="/scratch/crs12448/MEVE/GATK/MarkDuplicates"
 #Load the Genome Anlysis Toolkit
 ml  GATK/4.3.0.0-GCCcore-8.3.0-Java-1.8
 
-# Run MarkDuplicates to mark duplicate reads from RNAseq data. For each file in the DD, perform the mark duplicates function
+# Run MarkDuplicates to mark duplicate reads from RNAseq data. For each file in the DD, perform the mark duplicates function. Calling on JAVA with 64GB and 8 cores
 #cd $DD
 # for i in *.bam;
 # do
@@ -31,17 +31,24 @@ ml  GATK/4.3.0.0-GCCcore-8.3.0-Java-1.8
 
 ############################################################################################################################################3
 
-cd $OD
-OD_2="/scratch/crs12448/MEVE/GATK/SplitNCigarReads"
+#This takes a long time, so I split into mutiple scripts. Calling on them here....
 
-# # Run SplitNCigarReads to split reads that span introns into separate reads
- for i in *.bam;
- do
-  gatk --java-options "-Xmx120G -XX:+UseParallelGC -XX:ParallelGCThreads=10" SplitNCigarReads \
-       -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-       -I $i \
-       -O $OD_2/${i/_mark_dup.bam/_cigar.bam}
- done
+sbatch ~/MEVE/SplitCigar_1.sh
+sbatch ~/MEVE/SplitCigar_2.sh
+sbatch ~/MEVE/SplitCigar_3.sh
+sbatch ~/MEVE/SplitCigar_4.sh
+
+# cd $OD
+# OD_2="/scratch/crs12448/MEVE/GATK/SplitNCigarReads"
+
+# # # Run SplitNCigarReads to split reads that span introns into separate reads
+#  for i in *.bam;
+#  do
+#   gatk --java-options "-Xmx120G -XX:+UseParallelGC -XX:ParallelGCThreads=10" SplitNCigarReads \
+#        -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#        -I $i \
+#        -O $OD_2/${i/_mark_dup.bam/_cigar.bam}
+#  done
 
 ############################################################################################################################################
 
