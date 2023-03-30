@@ -25,7 +25,7 @@ OD_2="/scratch/crs12448/MEVE/GATK/SplitNCigarReads"
 # # Run SplitNCigarReads to split reads that span introns into separate reads
  for i in S263 S266_2 S280 S295 S302 S316;
  do
-  gatk SplitNCigarReads \
+  gatk --java-options "-Xmx32G -XX:+UseParallelGC -XX:ParallelGCThreads=2" SplitNCigarReads \
        -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
        -I ${i}_mark_dup.bam  \
        -O $OD_2/${i}_cigar.bam
