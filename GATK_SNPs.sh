@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=GATK_SNP                 # Job name
-#SBATCH --partition=batch	                            # Partition (queue) name
+#SBATCH --partition=highmem_p	                            # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
-#SBATCH --cpus-per-task=1                          # Number of cores per task - match this to the num_threads used by BLAST
-#SBATCH --mem=12gb			                                # Total memory for job
+#SBATCH --cpus-per-task=8                          # Number of cores per task - match this to the num_threads used by BLAST
+#SBATCH --mem=64gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_cigar.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_cigar.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_haplo.o    # Standard output and error log - # replace cbergman with your myid
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_haplo.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
@@ -33,13 +33,13 @@ ml  GATK/4.3.0.0-GCCcore-8.3.0-Java-1.8
 
 #This takes a long time, so I split into mutiple scripts. Calling on them here....
 
-sbatch ~/MEVE/SplitCigar_1.sh
-sbatch ~/MEVE/SplitCigar_2.sh
-sbatch ~/MEVE/SplitCigar_3.sh
-sbatch ~/MEVE/SplitCigar_4.sh
+# sbatch ~/MEVE/SplitCigar_1.sh
+# sbatch ~/MEVE/SplitCigar_2.sh
+# sbatch ~/MEVE/SplitCigar_3.sh
+# sbatch ~/MEVE/SplitCigar_4.sh
 
 # cd $OD
-# OD_2="/scratch/crs12448/MEVE/GATK/SplitNCigarReads"
+OD_2="/scratch/crs12448/MEVE/GATK/SplitNCigarReads"
 
 # # # Run SplitNCigarReads to split reads that span introns into separate reads
 #  for i in *.bam;
@@ -51,20 +51,22 @@ sbatch ~/MEVE/SplitCigar_4.sh
 #  done
 
 ############################################################################################################################################
+# Call SNPs for each sample individually using haplotype caller in GATK. With the -ERC GVCF option, temporary .gvcf files are created that can then be merged into one, and the genotype calls can be made across all samples.
+# From my understanding, this will allow genotypes to be called in samples even if they match the reference, as long as one sample contains a SNP in that position. 
 
-# cd $OD_2
+cd $OD_2
 
-# OD_3="dfafdafda"
+OD_3="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
 
-# for i in *.bam;
-# do
-#  gatk --java-options "-Xmx64g -XX:+UseParallelGC -XX:ParallelGCThreads=8" HaplotypeCaller  \
-#    -R /home/crs12448/ALL_METH_PROJ/Amiss.ref.2022.fna \
-#    -I $i \
-#    -O $OD_3/${i/_cigar.bam/.g.vcf.gz} \
-#    -ERC GVCF
-#    -G StandardAnnotation \
-#    -G AS_StandardAnnotation
-# done
+for i in *.bam;
+do
+ gatk --java-options "-Xmx120g -XX:+UseParallelGC -XX:ParallelGCThreads=8" HaplotypeCaller  \
+   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+   -I $i \
+   -O $OD_3/${i/_cigar.bam/.g.vcf.gz} \
+   -ERC GVCF
+   -G StandardAnnotation \
+   -G AS_StandardAnnotation
+done
  
 
