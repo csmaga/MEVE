@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=GATK_SNP                 # Job name
-#SBATCH --partition=batch	                            # Partition (queue) name
+#SBATCH --partition=highmem_p	                            # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
-#SBATCH --cpus-per-task=4                         # Number of cores per task - match this to the num_threads used by BLAST
-#SBATCH --mem=64gb			                                # Total memory for job
+#SBATCH --cpus-per-task=8                        # Number of cores per task - match this to the num_threads used by BLAST
+#SBATCH --mem=120gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_fix_bam.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_fix_bam.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_haplo.o    # Standard output and error log - # replace cbergman with your myid
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_haplo.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
@@ -54,9 +54,9 @@ OD_2="/scratch/crs12448/MEVE/GATK/SplitNCigarReads"
 # Call SNPs for each sample individually using haplotype caller in GATK. With the -ERC GVCF option, temporary .gvcf files are created that can then be merged into one, and the genotype calls can be made across all samples.
 # From my understanding, this will allow genotypes to be called in samples even if they match the reference, as long as one sample contains a SNP in that position. 
 
-cd $OD_2
+#cd $OD_2
 
-OD_3="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
+#OD_3="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
 
 # for i in *.bam;
 # do
@@ -72,12 +72,32 @@ OD_3="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
  # identifiers the same except for RG sample name. 
 
 # Fix the read groups......
-cd $OD_2
+#cd $OD_2
+
+# for i in *.bam;
+# do
+# gatk --java-options "-Xmx64g -XX:+UseParallelGC -XX:ParallelGCThreads=4" AddOrReplaceReadGroups \
+#         I=$i  O=/scratch/crs12448/MEVE/GATK/FixBam/${i/_cigar.bam/_cigar_fix.bam}  \
+#         SORT_ORDER=coordinate  RGLB=seq  RGPU=1 RGPL=illumina  RGSM=${i/_cigar.bam/}  \
+#         CREATE_INDEX=True
+# done
+############################################################################################################################################
+# Retry haplotype caller.....
+#Call SNPs for each sample individually using haplotype caller in GATK. With the -ERC GVCF option, temporary .gvcf files are created that can then be merged into one, and the genotype calls can be made across all samples.
+# From my understanding, this will allow genotypes to be called in samples even if they match the reference, as long as one sample contains a SNP in that position. 
+
+cd /scratch/crs12448/MEVE/GATK/FixBam
+
+OD_4="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
 
 for i in *.bam;
 do
-gatk --java-options "-Xmx64g -XX:+UseParallelGC -XX:ParallelGCThreads=4" AddOrReplaceReadGroups \
-        I=$i  O=/scratch/crs12448/MEVE/GATK/FixBam/${i/_cigar.bam/_cigar_fix.bam}  \
-        SORT_ORDER=coordinate  RGLB=seq  RGPU=1 RGPL=illumina  RGSM=${i/_cigar.bam/}  \
-        CREATE_INDEX=True
+ gatk --java-options "-Xmx120g -XX:+UseParallelGC -XX:ParallelGCThreads=8" HaplotypeCaller  \
+   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+   -I $i \
+   -O $OD_4/${i/_cigar.bam/.g.vcf.gz} \
+   -ERC GVCF
 done
+
+
+
