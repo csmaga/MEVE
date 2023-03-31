@@ -89,9 +89,10 @@ OD_2="/scratch/crs12448/MEVE/GATK/SplitNCigarReads"
 #Call SNPs for each sample individually using haplotype caller in GATK. With the -ERC GVCF option, temporary .gvcf files are created that can then be merged into one, and the genotype calls can be made across all samples.
 # From my understanding, this will allow genotypes to be called in samples even if they match the reference, as long as one sample contains a SNP in that position. 
 
-cd /scratch/crs12448/MEVE/GATK/FixBam
+
 
 OD_4="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
+cd /scratch/crs12448/MEVE/GATK/FixBam
 
 for i in *.bam;
 do
