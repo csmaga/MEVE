@@ -10,6 +10,8 @@
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
+ml  GATK/4.3.0.0-GCCcore-8.3.0-Java-1.8
+
 OD_4="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
 cd /scratch/crs12448/MEVE/GATK/FixBam
 
