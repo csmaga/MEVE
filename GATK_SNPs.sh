@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=GATK_SNP                 # Job name
-#SBATCH --partition=highmem_p	                            # Partition (queue) name
+#SBATCH --partition=batch	                            # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
-#SBATCH --cpus-per-task=8                          # Number of cores per task - match this to the num_threads used by BLAST
+#SBATCH --cpus-per-task=4                         # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=64gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_haplo.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_haplo.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_fix_bam.o    # Standard output and error log - # replace cbergman with your myid
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_fix_bam.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
@@ -58,13 +58,26 @@ cd $OD_2
 
 OD_3="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
 
+# for i in *.bam;
+# do
+#  gatk --java-options "-Xmx120g -XX:+UseParallelGC -XX:ParallelGCThreads=8" HaplotypeCaller  \
+#    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#    -I $i \
+#    -O $OD_3/${i/_cigar.bam/.g.vcf.gz} \
+#    -ERC GVCF
+# done
+ # !!!!!!!!!!!!!!!!!  This gives me an error that I am trying to run on more than one sample. From a little googling, that may be because my BAM files are missing the @RG identifier. Sure enough,
+ # when I look at the BAM files, there is no @RG. Luckily, GATK has a tool to add RG to samples with the below code. I don't think the information in RG is useful for my application,  so i only added
+ # the required fields, which are RGLB (read group library), RGPU (read group platform unit?), RGPL (read group platform), and RGSM (read group sample - this is the important one). For all samples, I will leave all 
+ # identifiers the same except for RG sample name. 
+
+# Fix the read groups......
+cd $OD_2
+
 for i in *.bam;
 do
- gatk --java-options "-Xmx120g -XX:+UseParallelGC -XX:ParallelGCThreads=8" HaplotypeCaller  \
-   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-   -I $i \
-   -O $OD_3/${i/_cigar.bam/.g.vcf.gz} \
-   -ERC GVCF
+gatk --java-options "-Xmx64g -XX:+UseParallelGC -XX:ParallelGCThreads=4" AddOrReplaceReadGroups \
+        I=$i  O=/scratch/crs12448/MEVE/GATK/FixBam/${i/_cigar.bam/_cigar_fix.bam}  \
+        SORT_ORDER=coordinate  RGLB=seq  RGPU=1 RGPL=illumina  RGSM=${i/_cigar.bam/}  \
+        CREATE_INDEX=True
 done
- 
-
