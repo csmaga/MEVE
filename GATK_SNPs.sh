@@ -65,8 +65,6 @@ do
    -I $i \
    -O $OD_3/${i/_cigar.bam/.g.vcf.gz} \
    -ERC GVCF
-   -G StandardAnnotation \
-   -G AS_StandardAnnotation
 done
  
 
