@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=4                        # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=120gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_haplo.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_haplo.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_merge.o    # Standard output and error log - # replace cbergman with your myid
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_merge.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
@@ -90,18 +90,35 @@ OD_2="/scratch/crs12448/MEVE/GATK/SplitNCigarReads"
 # From my understanding, this will allow genotypes to be called in samples even if they match the reference, as long as one sample contains a SNP in that position. 
 
 
-
 OD_4="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
-cd /scratch/crs12448/MEVE/GATK/FixBam
+# cd /scratch/crs12448/MEVE/GATK/FixBam
 
-for i in *.bam;
-do
- gatk --java-options "-Xmx120g -XX:+UseParallelGC -XX:ParallelGCThreads=4" HaplotypeCaller  \
-   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-   -I $i \
-   -O $OD_4/${i/_cigar.bam/.g.vcf.gz} \
-   -ERC GVCF
-done
+# for i in *.bam;
+# do
+#  gatk --java-options "-Xmx120g -XX:+UseParallelGC -XX:ParallelGCThreads=4" HaplotypeCaller  \
+#    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#    -I $i \
+#    -O $OD_4/${i/_cigar.bam/.g.vcf.gz} \
+#    -ERC GVCF
+# done
 
+# ## AGAIN this takes a LONG time, so split into several scripts
+# cd ~/MEVE
+
+# sbatch HaploCaller_1.sh
+# sbatch HaploCaller_2.sh
+# sbatch HaploCaller_3.sh
+# sbatch HaploCaller_4.sh
+
+# Combine the GVCF files into one:
+
+OD="/scratch/crs12448/MEVE/GATK/Merge"
+
+
+   gatk --java-options "-Xmx250g -Xms200g -XX:+UseParallelGC -XX:ParallelGCThreads=4" GenomicsDBImport \
+      -V $OD_4/S231.g.vcf.gz  \
+      -V $OD_4/S242.g.vcf.gz  
+      --genomicsdb-workspace-path /scratch/crs12448/MEVE/GATK/Merge/GenomicDB \
+      -L $OD_4/S231.g.vcf.gz
 
 
