@@ -116,9 +116,10 @@ OD="/scratch/crs12448/MEVE/GATK/Merge"
 
 
    gatk --java-options "-Xmx250g -Xms200g -XX:+UseParallelGC -XX:ParallelGCThreads=4" GenomicsDBImport \
-      -V $OD_4/S231.g.vcf.gz  \
-      -V $OD_4/S242.g.vcf.gz  \
+      -V $OD_4/S392  \
+      -V $OD_4/S393  \
       --genomicsdb-workspace-path /scratch/crs12448/MEVE/GATK/Merge/GenomicDB \
-      -L $OD_4/S231.g.vcf.gz
+      -L $OD_4/S392 \
+      -L $OD_4/S393
 
 
