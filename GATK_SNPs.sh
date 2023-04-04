@@ -133,31 +133,31 @@ OD_4="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
  
  gatk --java-options "-Xmx200g -XX:+UseParallelGC -XX:ParallelGCThreads=8" CombineGVCFs \
    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-   --variant S231.vcf \
-   --variant S242.vcf \
-   --variant S246.vcf \
-   --variant S247.vcf \
-   --variant S252.vcf \
-   --variant S256_2.vcf \
-   --variant S263.vcf \
-   --variant S266_2.vcf \
-   --variant S280.vcf \
-   --variant S295.vcf \
-   --variant S302.vcf \
-   --variant S316.vcf \
-   --variant S317.vcf \
-   --variant S319.vcf \
-   --variant S337.vcf \
-   --variant S344.vcf \
-   --variant S359.vcf \
-   --variant S376.vcf \
-   --variant S388.vcf \
-   --variant S391.vcf \
-   --variant S392.vcf \
-   --variant S393.vcf \
-   --variant S406.vcf \
-   --variant S432.vcf \
-   -O all_samples.vcf
+   --variant $FILTER_OD/S231.vcf \
+   --variant $FILTER_OD/S242.vcf \
+   --variant $FILTER_OD/S246.vcf \
+   --variant $FILTER_OD/S247.vcf \
+   --variant $FILTER_OD/S252.vcf \
+   --variant $FILTER_OD/S256_2.vcf \
+   --variant $FILTER_OD/S263.vcf \
+   --variant $FILTER_OD/S266_2.vcf \
+   --variant $FILTER_OD/S280.vcf \
+   --variant $FILTER_OD/S295.vcf \
+   --variant $FILTER_OD/S302.vcf \
+   --variant $FILTER_OD/S316.vcf \
+   --variant $FILTER_OD/S317.vcf \
+   --variant $FILTER_OD/S319.vcf \
+   --variant $FILTER_OD/S337.vcf \
+   --variant $FILTER_OD/S344.vcf \
+   --variant $FILTER_OD/S359.vcf \
+   --variant $FILTER_OD/S376.vcf \
+   --variant $FILTER_OD/S388.vcf \
+   --variant $FILTER_OD/S391.vcf \
+   --variant $FILTER_OD/S392.vcf \
+   --variant $FILTER_OD/S393.vcf \
+   --variant $FILTER_OD/S406.vcf \
+   --variant $FILTER_OD/S432.vcf \
+   -O $FILTER_OD/all_samples.vcf
 
 
 
