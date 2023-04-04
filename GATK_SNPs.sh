@@ -168,4 +168,4 @@ cd $FILTER_OD
  gatk --java-options "-Xmx200g -XX:+UseParallelGC -XX:ParallelGCThreads=8" GenotypeGVCFs \
    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
    -V all_samples.g.vcf \
-   -O scratch/crs12448/MEVE/GATK/HaplotypeCaller/GenotypeGVCF/AP_WO_SNPs.vcf
+   -O /scratch/crs12448/MEVE/GATK/GenotypeGVCF/AP_WO_SNPs.vcf
