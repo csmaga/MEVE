@@ -129,35 +129,36 @@ OD_4="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
 
 # Combine the GVCF files into one using the CombineGVCFs function. There is also a GenomicDBImport option that is better for handling more files, but I understand it less and think this might work for only 24 samples (plus they are filtered and have less SNPs):
  
+ FILTER_OD="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/Filter_GVCF"
  cd $FILTER_OD
  
  gatk --java-options "-Xmx200g -XX:+UseParallelGC -XX:ParallelGCThreads=8" CombineGVCFs \
    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-   --variant $FILTER_OD/S231_filtered.g.vcf \
-   --variant $FILTER_OD/S242_filtered.g.vcf \
-   --variant $FILTER_OD/S246_filtered.g.vcf \
-   --variant $FILTER_OD/S247_filtered.g.vcf \
-   --variant $FILTER_OD/S252_filtered.g.vcf \
-   --variant $FILTER_OD/S256_2_filtered.g.vcf \
-   --variant $FILTER_OD/S263_filtered.g.vcf \
-   --variant $FILTER_OD/S266_2_filtered.g.vcf \
-   --variant $FILTER_OD/S280_filtered.g.vcf \
-   --variant $FILTER_OD/S295_filtered.g.vcf \
-   --variant $FILTER_OD/S302_filtered.g.vcf \
-   --variant $FILTER_OD/S316_filtered.g.vcf \
-   --variant $FILTER_OD/S317_filtered.g.vcf \
-   --variant $FILTER_OD/S319_filtered.g.vcf \
-   --variant $FILTER_OD/S337_filtered.g.vcf \
-   --variant $FILTER_OD/S344_filtered.g.vcf \
-   --variant $FILTER_OD/S359_filtered.g.vcf \
-   --variant $FILTER_OD/S376_filtered.g.vcf \
-   --variant $FILTER_OD/S388_filtered.g.vcf \
-   --variant $FILTER_OD/S391_filtered.g.vcf \
-   --variant $FILTER_OD/S392_filtered.g.vcf \
-   --variant $FILTER_OD/S393_filtered.g.vcf \
-   --variant $FILTER_OD/S406_filtered.g.vcf \
-   --variant $FILTER_OD/S432_filtered.g.vcf \
-   -O $FILTER_OD/all_samples.g.vcf
+   --variant S231_filtered.g.vcf \
+   --variant S242_filtered.g.vcf \
+   --variant S246_filtered.g.vcf \
+   --variant S247_filtered.g.vcf \
+   --variant S252_filtered.g.vcf \
+   --variant S256_2_filtered.g.vcf \
+   --variant S263_filtered.g.vcf \
+   --variant S266_2_filtered.g.vcf \
+   --variant S280_filtered.g.vcf \
+   --variant S295_filtered.g.vcf \
+   --variant S302_filtered.g.vcf \
+   --variant S316_filtered.g.vcf \
+   --variant S317_filtered.g.vcf \
+   --variant S319_filtered.g.vcf \
+   --variant S337_filtered.g.vcf \
+   --variant S344_filtered.g.vcf \
+   --variant S359_filtered.g.vcf \
+   --variant S376_filtered.g.vcf \
+   --variant S388_filtered.g.vcf \
+   --variant S391_filtered.g.vcf \
+   --variant S392_filtered.g.vcf \
+   --variant S393_filtered.g.vcf \
+   --variant S406_filtered.g.vcf \
+   --variant S432_filtered.g.vcf \
+   -O all_samples.g.vcf
 
 
 
