@@ -120,7 +120,7 @@ FILTER_OD="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/Filter_GVCF"
 # This code only keeps sites that have a mean depth > 20, minimum quality of 30. No max depth set because in RNAseq, I expect some depths are really high biologically
  for i in S231 S242 S246 S247 S252 S256_2 S263 S266_2 S280 S295 S302 S316 S317 S319 S337 S344 S359 S376 S388 S391 S392 S393 S406 S432;
  do
-  vcftools $i --minQ 30 --min-meanDP 20 --recode --stdout > $FILTER_OD/${i}_filtered.g.vcf
+  vcftools --vcf $i --minQ 30 --min-meanDP 20 --recode --stdout > $FILTER_OD/${i}_filtered.g.vcf
 done
 
 
