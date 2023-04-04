@@ -1,12 +1,12 @@
 #!/bin/bash
 #SBATCH --job-name=GATK_SNP                 # Job name
-#SBATCH --partition=batch	                            # Partition (queue) name
+#SBATCH --partition=highmem_p                            # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
-#SBATCH --cpus-per-task=1                       # Number of cores per task - match this to the num_threads used by BLAST
-#SBATCH --mem=24gb			                                # Total memory for job
+#SBATCH --cpus-per-task=8                       # Number of cores per task - match this to the num_threads used by BLAST
+#SBATCH --mem=200gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_filter_gvcf.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_filter_gvcf.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_combine_gvcf.o    # Standard output and error log - # replace cbergman with your myid
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_combine_gvcf.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
@@ -113,21 +113,41 @@ OD_4="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
 
 # The GVCF files are HUGE because they count every base covered regardless of whether it is variable or not (so that genotyping cann be done with multiple individuals). Combining the raw files would take forever and lead to a massive GVCF, so first filter out low quality and low depth SNPs
 # Perform the filtering with vcftools
-ml VCFtools/0.1.16-GCC-8.3.0-Perl-5.30.0
+# ml VCFtools/0.1.16-GCC-8.3.0-Perl-5.30.0
 
-FILTER_OD="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/Filter_GVCF"
+# FILTER_OD="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/Filter_GVCF"
 
-cd /scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF
-# This code only keeps sites that have a mean depth > 20, minimum quality of 30. No max depth set because in RNAseq, I expect some depths are really high biologically
- for i in S231 S242 S246 S247 S252 S256_2 S263 S266_2 S280 S295 S302 S316 S317 S319 S337 S344 S359 S376 S388 S391 S392 S393 S406 S432;
- do
-  vcftools --vcf $i --minQ 30 --min-meanDP 20 --recode --stdout > $FILTER_OD/${i}_filtered.g.vcf
-done
-
-
+# cd /scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF
+# # This code only keeps sites that have a mean depth > 20, minimum quality of 30. No max depth set because in RNAseq, I expect some depths are really high biologically
+#  for i in S231 S242 S246 S247 S252 S256_2 S263 S266_2 S280 S295 S302 S316 S317 S319 S337 S344 S359 S376 S388 S391 S392 S393 S406 S432;
+#  do
+#   vcftools --vcf $i --minQ 30 --min-meanDP 20 --recode --stdout > $FILTER_OD/${i}_filtered.g.vcf
+# done
 
 
-# Combine the GVCF files into one:
+
+
+# Combine the GVCF files into one using the CombineGVCFs function. There is also a GenomicDBImport option that is better for handling more files, but I understand it less and think this might work for only 24 samples (plus they are filtered and have less SNPs):
+ 
+ cd $FILTER_OD
+ 
+ gatk --java-options "-Xmx200g -XX:+UseParallelGC -XX:ParallelGCThreads=8" CombineGVCFs \
+   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+   --variant *.vcf \
+   -O all_samples.vcf
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 # OD="/scratch/crs12448/MEVE/GATK/Merge"
 
