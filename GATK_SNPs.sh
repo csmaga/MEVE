@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=8                       # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=200gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_combine_gvcf.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_combine_gvcf.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_genotype.o    # Standard output and error log - # replace cbergman with your myid
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_genotype.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
@@ -132,55 +132,40 @@ OD_4="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF"
  FILTER_OD="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/Filter_GVCF"
  cd $FILTER_OD
  
- gatk --java-options "-Xmx200g -XX:+UseParallelGC -XX:ParallelGCThreads=8" CombineGVCFs \
+#  gatk --java-options "-Xmx200g -XX:+UseParallelGC -XX:ParallelGCThreads=8" CombineGVCFs \
+#    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#    --variant S231_filtered.g.vcf \
+#    --variant S242_filtered.g.vcf \
+#    --variant S246_filtered.g.vcf \
+#    --variant S247_filtered.g.vcf \
+#    --variant S252_filtered.g.vcf \
+#    --variant S256_2_filtered.g.vcf \
+#    --variant S263_filtered.g.vcf \
+#    --variant S266_2_filtered.g.vcf \
+#    --variant S280_filtered.g.vcf \
+#    --variant S295_filtered.g.vcf \
+#    --variant S302_filtered.g.vcf \
+#    --variant S316_filtered.g.vcf \
+#    --variant S317_filtered.g.vcf \
+#    --variant S319_filtered.g.vcf \
+#    --variant S337_filtered.g.vcf \
+#    --variant S344_filtered.g.vcf \
+#    --variant S359_filtered.g.vcf \
+#    --variant S376_filtered.g.vcf \
+#    --variant S388_filtered.g.vcf \
+#    --variant S391_filtered.g.vcf \
+#    --variant S392_filtered.g.vcf \
+#    --variant S393_filtered.g.vcf \
+#    --variant S406_filtered.g.vcf \
+#    --variant S432_filtered.g.vcf \
+#    -O all_samples.g.vcf
+
+######################################################
+
+# Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
+cd $FILTER_OD
+
+ gatk --java-options "-Xmx200g -XX:+UseParallelGC -XX:ParallelGCThreads=8" GenotypeGVCFs \
    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-   --variant S231_filtered.g.vcf \
-   --variant S242_filtered.g.vcf \
-   --variant S246_filtered.g.vcf \
-   --variant S247_filtered.g.vcf \
-   --variant S252_filtered.g.vcf \
-   --variant S256_2_filtered.g.vcf \
-   --variant S263_filtered.g.vcf \
-   --variant S266_2_filtered.g.vcf \
-   --variant S280_filtered.g.vcf \
-   --variant S295_filtered.g.vcf \
-   --variant S302_filtered.g.vcf \
-   --variant S316_filtered.g.vcf \
-   --variant S317_filtered.g.vcf \
-   --variant S319_filtered.g.vcf \
-   --variant S337_filtered.g.vcf \
-   --variant S344_filtered.g.vcf \
-   --variant S359_filtered.g.vcf \
-   --variant S376_filtered.g.vcf \
-   --variant S388_filtered.g.vcf \
-   --variant S391_filtered.g.vcf \
-   --variant S392_filtered.g.vcf \
-   --variant S393_filtered.g.vcf \
-   --variant S406_filtered.g.vcf \
-   --variant S432_filtered.g.vcf \
-   -O all_samples.g.vcf
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-# OD="/scratch/crs12448/MEVE/GATK/Merge"
-
-
-#    gatk --java-options "-Xmx250g -Xms200g -XX:+UseParallelGC -XX:ParallelGCThreads=4" GenomicsDBImport \
-#       -V $OD_4/S392  \
-#       -V $OD_4/S393  \
-#       --genomicsdb-workspace-path /scratch/crs12448/MEVE/GATK/Merge/GenomicDB \
-#       -L $OD_4/S392 \
-#       -L $OD_4/S393
-
-
+   -V all_samples.g.vcf \
+   -O scratch/crs12448/MEVE/GATK/HaplotypeCaller/GenotypeGVCF/AP_WO_SNPs.vcf
