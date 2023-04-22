@@ -10,7 +10,11 @@
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
-#SBATCH --array=S231,S242, S246, S247, S252, S256_2, S263, S266_2, S280, S295, S302, S316, S317, S319, S337, S344, S359, S376, S388, S391, S392, S393, S406, S432 
+#SBATCH --array=231,242, 246, 247 
+
+
+
+#S252, S256_2, S263, S266_2, S280, S295, S302, S316, S317, S319, S337, S344, S359, S376, S388, S391, S392, S393, S406, S432 
 
 
 # ml  GATK/4.3.0.0-GCCcore-8.3.0-Java-1.8
@@ -27,4 +31,4 @@
 #    -ERC GVCF
 #done
 
-echo "${SLURM_ARRAY_TASK_ID}_cigar_fix.bam"
+echo "S${SLURM_ARRAY_TASK_ID}_cigar_fix.bam"
