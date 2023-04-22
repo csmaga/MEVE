@@ -9,11 +9,9 @@
 #SBATCH --error=/scratch/crs12448/MEVE/Logs2/GATK_haplo2_1.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
-#SBATCH --array=1-4
+#SBATCH --array=231,242,246,247
 
-SAMPLE_LIST='S231,S242,S246,S247'
 
-sample=$(awk -v ArrayTaskID=$SLURM_ARRAY_TASK_ID '$1==ArrayTaskID {print $2}' $SAMPLE_LIST)
 
 #SAMPLE=${SAMPLE_LIST[${SLURM_ARRAY_TASK_ID}]}
 
@@ -35,3 +33,5 @@ sample=$(awk -v ArrayTaskID=$SLURM_ARRAY_TASK_ID '$1==ArrayTaskID {print $2}' $S
 #done
 
 echo $sample > $sample.out
+
+echo 'S'${SLURM_ARRAY_TASK_ID}'.out'
