@@ -13,7 +13,7 @@
 ml  GATK/4.3.0.0-GCCcore-8.3.0-Java-1.8
 
 OD_4="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF2"
-cd /scratch/crs12448/MEVE/GATK/FixBam
+cd /scratch/crs12448/MEVE/GATK/FixBam2
 
 for i in S231 S242 S246 S247 S252 S256_2;
 do
