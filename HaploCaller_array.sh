@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1	                                # Single task job
 #SBATCH --cpus-per-task=1                        # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=4gb			                                # Total memory for job
-#SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
+#SBATCH --time=24:00:00  		                            # Time limit hrs:min:sec
 #SBATCH --output=/scratch/crs12448/MEVE/Logs2/GATK_haplo2_1.o    # Standard output and error log - # replace cbergman with your myid
 #SBATCH --error=/scratch/crs12448/MEVE/Logs2/GATK_haplo2_1.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
@@ -12,7 +12,10 @@
 #SBATCH --array=1-4
 
 SAMPLE_LIST=("S231","S242","S246","S247")
-SAMPLE=${SAMPLE_LIST[${SLURM_ARRAY_TASK_ID}]}
+
+sample=$(awk -v ArrayTaskID=$SLURM_ARRAY_TASK_ID '$1==ArrayTaskID {print $2}' $SAMPLE_LIST)
+
+#SAMPLE=${SAMPLE_LIST[${SLURM_ARRAY_TASK_ID}]}
 
 #S252, S256_2, S263, S266_2, S280, S295, S302, S316, S317, S319, S337, S344, S359, S376, S388, S391, S392, S393, S406, S432 
 
@@ -31,4 +34,4 @@ SAMPLE=${SAMPLE_LIST[${SLURM_ARRAY_TASK_ID}]}
 #    -ERC GVCF
 #done
 
-echo $SAMPLE"_cigar_fix.bam"
+echo $sample > $sample.out
