@@ -3,7 +3,7 @@
 #SBATCH --partition=batch	                            # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
 #SBATCH --cpus-per-task=1                           # Number of cores per task - match this to the num_threads used by BLAST
-#SBATCH --mem=32gb			                                # Total memory for job
+#SBATCH --mem=60gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_cigar2_4.o    # Standard output and error log - # replace cbergman with your myid
 #SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_cigar2_4.e
@@ -26,7 +26,7 @@ OD_2="/scratch/crs12448/MEVE/GATK/SplitNCigarReads2"
 # # Run SplitNCigarReads to split reads that span introns into separate reads
  for i in S388 S391 S392 S393 S406 S432;
  do
-  gatk --java-options "-Xmx32G"  SplitNCigarReads \
+  gatk --java-options "-Xmx60G"  SplitNCigarReads \
        -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
        -I ${i}_mark_dup.bam  \
        -O $OD_2/${i}_cigar.bam
