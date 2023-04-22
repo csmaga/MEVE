@@ -11,7 +11,7 @@
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 #SBATCH --array=1-4
 
-SAMPLE_LIST=(S231,S242,S246,S247)
+SAMPLE_LIST=("S231","S242","S246","S247")
 SAMPLE=${SAMPLE_LIST[${SLURM_ARRAY_TASK_ID}]}
 
 #S252, S256_2, S263, S266_2, S280, S295, S302, S316, S317, S319, S337, S344, S359, S376, S388, S391, S392, S393, S406, S432 
@@ -31,4 +31,4 @@ SAMPLE=${SAMPLE_LIST[${SLURM_ARRAY_TASK_ID}]}
 #    -ERC GVCF
 #done
 
-echo "S${SAMPLE}_cigar_fix.bam"
+echo "${SAMPLE}_cigar_fix.bam"
