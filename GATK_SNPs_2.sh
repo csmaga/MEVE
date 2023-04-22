@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=GATK_SNP                 # Job name
-#SBATCH --partition=highmem_p                          # Partition (queue) name
+#SBATCH --partition=batch                          # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
 #SBATCH --cpus-per-task=1                       # Number of cores per task - match this to the num_threads used by BLAST
-#SBATCH --mem=64gb			                                # Total memory for job
+#SBATCH --mem=60gb			                                # Total memory for job
 #SBATCH --time=72:00:00  		                            # Time limit hrs:min:sec
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK2_fix2.o    # Standard output and error log - # replace cbergman with your myid
 #SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK2_fix2.e
@@ -76,7 +76,7 @@ cd $OD_2
 
 for i in *.bam;
  do
- gatk --java-options "-Xmx64g" AddOrReplaceReadGroups \
+ gatk --java-options "-Xmx60g" AddOrReplaceReadGroups \
          I=$i  \
          O=/scratch/crs12448/MEVE/GATK/FixBam2/${i/_cigar.bam/_cigar_fix.bam}  \
          SORT_ORDER=coordinate  RGLB=seq  RGPU=1 RGPL=illumina  RGSM=${i/_cigar.bam/}  \
