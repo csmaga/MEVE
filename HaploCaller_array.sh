@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=GATK_SNP                 # Job name
-#SBATCH --partition=bash	                            # Partition (queue) name
+#SBATCH --partition=batch	                            # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
 #SBATCH --cpus-per-task=1                        # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=4gb			                                # Total memory for job
@@ -9,7 +9,6 @@
 #SBATCH --error=/scratch/crs12448/MEVE/Logs2/GATK_haplo2_1.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
-
 #SBATCH --array=1-4
 
 SAMPLE_LIST=(S231,S242,S246,S247)
