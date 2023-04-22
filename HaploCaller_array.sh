@@ -10,7 +10,7 @@
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
-#SBATCH --array=1-24
+#SBATCH --array=1-4
 
 SAMPLE_LIST=(S231,S242,S246,S247)
 SAMPLE=${SAMPLE_LIST[${SLURM_ARRAY_TASK_ID}]}
