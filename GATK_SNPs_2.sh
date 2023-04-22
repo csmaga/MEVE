@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=GATK_SNP                 # Job name
-#SBATCH --partition=batch                           # Partition (queue) name
+#SBATCH --partition=highmem_p                          # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
 #SBATCH --cpus-per-task=1                       # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=64gb			                                # Total memory for job
