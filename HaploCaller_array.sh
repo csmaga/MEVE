@@ -31,4 +31,4 @@ SAMPLE=${SAMPLE_LIST[${SLURM_ARRAY_TASK_ID}]}
 #    -ERC GVCF
 #done
 
-echo "${SAMPLE}_cigar_fix.bam"
+echo $SAMPLE"_cigar_fix.bam"
