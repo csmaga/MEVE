@@ -5,8 +5,8 @@
 #SBATCH --cpus-per-task=1                        # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=4gb			                                # Total memory for job
 #SBATCH --time=24:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/scratch/crs12448/MEVE/Logs2/GATK_haplo2_1.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs2/GATK_haplo2_1.e
+#SBATCH --output=/scratch/crs12448/MEVE/Logs2/   # Standard output and error log - # replace cbergman with your myid
+#SBATCH --error=/scratch/crs12448/MEVE/Logs2/
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 #SBATCH --array=231,242,246,247
@@ -32,6 +32,6 @@
 #    -ERC GVCF
 #done
 
-echo $sample > $sample.out
+#echo $sample > $sample.out
 
 echo 'S'${SLURM_ARRAY_TASK_ID}'.out'
