@@ -11,7 +11,7 @@
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 #SBATCH --array=1-4
 
-SAMPLE_LIST=("S231","S242","S246","S247")
+SAMPLE_LIST='S231,S242,S246,S247'
 
 sample=$(awk -v ArrayTaskID=$SLURM_ARRAY_TASK_ID '$1==ArrayTaskID {print $2}' $SAMPLE_LIST)
 
