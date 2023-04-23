@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1	                                # Single task job
 #SBATCH --cpus-per-task=4                        # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=300gb			                                # Total memory for job
-#SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
+#SBATCH --time=24:00:00  		                            # Time limit hrs:min:sec
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK_haplo2_4.o    # Standard output and error log - # replace cbergman with your myid
 #SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK_haplo2_4.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
