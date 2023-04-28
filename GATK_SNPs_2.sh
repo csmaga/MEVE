@@ -209,45 +209,47 @@ ml VCFtools/0.1.16-GCC-8.3.0-Perl-5.30.0
 ######################################################
 # Combine the GVCF files into one using the CombineGVCFs function. There is also a GenomicDBImport option that is better for handling more files, but I understand it less and think this might work for only 24 samples (plus they are filtered and have less SNPs):
  
- FILTER_OD="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF2"
- cd $FILTER_OD
+#  FILTER_OD="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/GVCF2"
+#  cd $FILTER_OD
  
- gatk --java-options "-Xmx200g" CombineGVCFs \
-   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-   --variant S231 \
-   --variant S242 \
-   --variant S246 \
-   --variant S247 \
-   --variant S252 \
-   --variant S256_2 \
-   --variant S263 \
-   --variant S266_2 \
-   --variant S280 \
-   --variant S295 \
-   --variant S302 \
-   --variant S316 \
-   --variant S317 \
-   --variant S319 \
-   --variant S337 \
-   --variant S344 \
-   --variant S359 \
-   --variant S376 \
-   --variant S388 \
-   --variant S391 \
-   --variant S392 \
-   --variant S393 \
-   --variant S406 \
-   --variant S432 \
-   -O /scratch/crs12448/MEVE/GATK/HaplotypeCaller/Combined_samples/all_samples.vcf
+#  gatk --java-options "-Xmx200g" CombineGVCFs \
+#    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#    --variant S231 \
+#    --variant S242 \
+#    --variant S246 \
+#    --variant S247 \
+#    --variant S252 \
+#    --variant S256_2 \
+#    --variant S263 \
+#    --variant S266_2 \
+#    --variant S280 \
+#    --variant S295 \
+#    --variant S302 \
+#    --variant S316 \
+#    --variant S317 \
+#    --variant S319 \
+#    --variant S337 \
+#    --variant S344 \
+#    --variant S359 \
+#    --variant S376 \
+#    --variant S388 \
+#    --variant S391 \
+#    --variant S392 \
+#    --variant S393 \
+#    --variant S406 \
+#    --variant S432 \
+#    -O /scratch/crs12448/MEVE/GATK/HaplotypeCaller/Combined_samples/all_samples.vcf
 
-
+############################################################################################################################
 # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
 #cd $FILTER_OD
+FILTER_OD="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/FilterGVCF2"
+cd $FILTER_OD
 
- #gatk --java-options "-Xmx200g" GenotypeGVCFs \
-  # -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-   #-V all_samples.g.vcf \
-   #-O /scratch/crs12448/MEVE/GATK/GenotypeGVCF/new/AP_WO_SNPs_new.vcf
+ gatk --java-options "-Xmx200g" GenotypeGVCFs \
+   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+   -V all_samples.vcf \
+   -O /scratch/crs12448/MEVE/GATK/GenotypeGVCF2/AP_WO.vcf
 
 ###################################################
 
