@@ -2,11 +2,11 @@
 #SBATCH --job-name=GATK_SNP                 # Job name
 #SBATCH --partition=highmem_p                         # Partition (queue) name
 #SBATCH --ntasks=1	                                # Single task job
-#SBATCH --cpus-per-task=1                       # Number of cores per task - match this to the num_threads used by BLAST
+#SBATCH --cpus-per-task=12                       # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=200gb			                                # Total memory for job
-#SBATCH --time=24:00:00  		                            # Time limit hrs:min:sec
-#SBATCH --output=/scratch/crs12448/MEVE/Logs/GATK2_combine.o    # Standard output and error log - # replace cbergman with your myid
-#SBATCH --error=/scratch/crs12448/MEVE/Logs/GATK2_combine.e
+#SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
+#SBATCH --output=/scratch/crs12448/MEVE/Logs/haplo_all.o    # Standard output and error log - # replace cbergman with your myid
+#SBATCH --error=/scratch/crs12448/MEVE/Logs/haplo_all.e
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
 #SBATCH --mail-type=END,FAIL                            # Mail events (BEGIN, END, FAIL, ALL)
 
@@ -136,14 +136,14 @@ ml VCFtools/0.1.16-GCC-8.3.0-Perl-5.30.0
 # Retry haplotype caller, this time on all samples at once - maybe this will change the high heterozygosity values I saw with the previous pipeline
 
 
-# OD_5="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/Combined_samples"
-# cd /scratch/crs12448/MEVE/GATK/FixBam
+ OD_5="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/Combined_samples"
+ cd /scratch/crs12448/MEVE/GATK/FixBam2
 
-# gatk --java-options "-Xmx300g -XX:+UseParallelGC -XX:ParallelGCThreads=12" HaplotypeCaller  \
-#  -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-#  -I S231_cigar_fix.bam S242_cigar_fix.bam S246_cigar_fix.bam S247_cigar_fix.bam S252_cigar_fix.bam S256_2_cigar_fix.bam S263_cigar_fix.bam S266_2_cigar_fix.bam S280_cigar_fix.bam S295_cigar_fix.bam S302_cigar_fix.bam S316_cigar_fix.bam \
-#     S317_cigar_fix.bam S319_cigar_fix.bam S337_cigar_fix.bam S344_cigar_fix.bam S359_cigar_fix.bam S376_cigar_fix.bam S388_cigar_fix.bam S391_cigar_fix.bam S392_cigar_fix.bam S393_cigar_fix.bam S406_cigar_fix.bam S432_cigar_fix.bam \
-#  --native-pair-hmm-threads 12 -O $OD_5/AP_WO_combined.vcf 
+ gatk --java-options "-Xmx200g" HaplotypeCaller  \
+  -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+  -I S231_cigar_fix.bam S242_cigar_fix.bam S246_cigar_fix.bam S247_cigar_fix.bam S252_cigar_fix.bam S256_2_cigar_fix.bam S263_cigar_fix.bam S266_2_cigar_fix.bam S280_cigar_fix.bam S295_cigar_fix.bam S302_cigar_fix.bam S316_cigar_fix.bam \
+     S317_cigar_fix.bam S319_cigar_fix.bam S337_cigar_fix.bam S344_cigar_fix.bam S359_cigar_fix.bam S376_cigar_fix.bam S388_cigar_fix.bam S391_cigar_fix.bam S392_cigar_fix.bam S393_cigar_fix.bam S406_cigar_fix.bam S432_cigar_fix.bam \
+  --native-pair-hmm-threads 12 -O $OD_5/AP_WO_combined.vcf 
 
 
 
@@ -242,19 +242,19 @@ ml VCFtools/0.1.16-GCC-8.3.0-Perl-5.30.0
 
 ############################################################################################################################
 # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
-#cd $FILTER_OD
-FILTER_OD="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/FilterGVCF2"
-cd $FILTER_OD
+# #cd $FILTER_OD
+# FILTER_OD="/scratch/crs12448/MEVE/GATK/HaplotypeCaller/FilterGVCF2"
+# cd $FILTER_OD
 
- gatk --java-options "-Xmx200g" GenotypeGVCFs \
-   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-   -V all_samples.vcf \
-   -O /scratch/crs12448/MEVE/GATK/GenotypeGVCF2/AP_WO.vcf
+#  gatk --java-options "-Xmx200g" GenotypeGVCFs \
+#    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#    -V all_samples.vcf \
+#    -O /scratch/crs12448/MEVE/GATK/GenotypeGVCF2/AP_WO.vcf
 
 ###################################################
 
 # Filter SNPs
-#vcftools --vcf AP_WO_SNPs.vcf --remove-indels --maf 0.1 --max-missing 0.8 --minQ 30 --min-meanDP 20 --minDP 20 --recode --stdout > AP_WO_SNPs_filter.vcf
+#vcftools --vcf AP_WO.vcf --remove-indels --maf 0.05 --max-missing 0.7 --minQ 30 --min-meanDP 20 --minDP 20  --recode --recode-INFO-all --stdout > AP_WO_SNPs_filter.vcf
 
 
 # Create a matrix of SNPs for exploratory analysis
