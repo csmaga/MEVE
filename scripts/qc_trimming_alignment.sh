@@ -10,7 +10,7 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --array=1-50 
 
-file=$(awk "NR==${SLURM_ARRAY_TASK_ID}" input.list)
+file=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
 
 ## make project directory + make directory for ref genome
 OUTDIR="/scratch/crs12448/MEVE"
