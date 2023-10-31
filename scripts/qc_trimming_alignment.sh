@@ -57,7 +57,7 @@ echo
 echo 'directory created.'
 echo
 
-fastqc -o $OUTDIR/RawReadQC -t 10 $OUTDIR/Data/Raw/${sample}/*.gz
+#fastqc -o $OUTDIR/RawReadQC -t 10 $OUTDIR/Data/Raw/${sample}/*.gz
 
 echo 
 echo 'Trimming raw reads...'
@@ -96,6 +96,8 @@ echo
 ml Trim_Galore/0.6.7-GCCcore-11.2.0
 ml Python/3.10.8-GCCcore-12.2.0
 ml pigz/2.7-GCCcore-11.3.0
+ml cutadapt/4.5-GCCcore-11.3.0
+
 
 ##trim raw reads
 
