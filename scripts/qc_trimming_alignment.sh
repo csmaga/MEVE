@@ -10,7 +10,7 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --array=1-50 
 
-sample=$(awk "NR==${sample}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
+sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
 
 ## make project directory + make directory for ref genome
 OUTDIR="/scratch/crs12448/MEVE"
@@ -93,7 +93,7 @@ echo
 echo 'Load modules for trimming...'
 echo
 
-ml Trim_Galore: Trim_Galore/0.6.7-GCCcore-11.2.0
+ml Trim_Galore/0.6.7-GCCcore-11.2.0
 ml Python/3.10.8-GCCcore-12.2.0
 ml pigz/2.7-GCCcore-11.3.0
 
