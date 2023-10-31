@@ -10,7 +10,7 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --array=1-50 
 
-file=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
+sample=$(awk "NR==${sample}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
 
 ## make project directory + make directory for ref genome
 OUTDIR="/scratch/crs12448/MEVE"
@@ -30,7 +30,7 @@ date
 
 echo 'Project directory = ' $OUTDIR
 echo
-echo 'Sample: ' $SLURM_ARRAY_TASK_ID
+echo 'Sample: ' $sample
 echo
 echo 'Raw FastQC'
 
@@ -57,7 +57,7 @@ echo
 echo 'directory created.'
 echo
 
-fastqc -o $OUTDIR/RawReadQC -t 10 $OUTDIR/Data/Raw/${SLURM_ARRAY_TASK_ID}/*.gz
+fastqc -o $OUTDIR/RawReadQC -t 10 $OUTDIR/Data/Raw/${sample}/*.gz
 
 echo 
 echo 'Trimming raw reads...'
@@ -93,7 +93,7 @@ echo
 echo 'Load modules for trimming...'
 echo
 
-ml Trim_Galore/0.6.5-GCCcore-8.3.0-Java-11-Python-3.7.4
+ml Trim_Galore: Trim_Galore/0.6.7-GCCcore-11.2.0
 ml Python/3.10.8-GCCcore-12.2.0
 ml pigz/2.7-GCCcore-11.3.0
 
@@ -103,7 +103,7 @@ echo
 echo 'Trimming raw reads and performing FastQC...'
 echo
 
-trim_galore --cores 4 --fastqc --fastqc_args "--outdir $OUTDIR/TrimmedQC" -stringency 3 -o $OUTDIR/TrimmedReads --paired  $OUTDIR/Data/Raw/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}_1.fq.gz $OUTDIR/Data/Raw/${SLURM_ARRAY_TASK_ID}/${SLURM_ARRAY_TASK_ID}_2.fq.gz
+trim_galore --cores 4 --fastqc --fastqc_args "--outdir $OUTDIR/TrimmedQC" -stringency 3 -o $OUTDIR/TrimmedReads --paired  $OUTDIR/Data/Raw/${sample}/${sample}_1.fq.gz $OUTDIR/Data/Raw/${sample}/${sample}_2.fq.gz
 
 echo
 echo 'trimming complete.'
@@ -148,7 +148,7 @@ fi
 
 echo 'Aligning...'
 
-hisat2 -x $OUTDIR/Alignment/HISAT2/Genome_Index/Index/Amiss.index.ref.hisat2  -p 10 --rna-strandness FR --dta -q -1 $OUTDIR/TrimmedReads/${SLURM_ARRAY_TASK_ID}_1_val_1.fq.gz -2 $OUTDIR/TrimmedReads/${SLURM_ARRAY_TASK_ID}_2_val_2.fq.gz -S $OUTDIR/Alignment/HISAT2/SAM/${SLURM_ARRAY_TASK_ID}.sam --summary-file /$OUTDIR/MEVE/Alignment/HISAT2/Stats/${SLURM_ARRAY_TASK_ID}_HISAT2_alignment_summary
+hisat2 -x $OUTDIR/Alignment/HISAT2/Genome_Index/Index/Amiss.index.ref.hisat2  -p 10 --rna-strandness FR --dta -q -1 $OUTDIR/TrimmedReads/${sample}_1_val_1.fq.gz -2 $OUTDIR/TrimmedReads/${sample}_2_val_2.fq.gz -S $OUTDIR/Alignment/HISAT2/SAM/${sample}.sam --summary-file /$OUTDIR/MEVE/Alignment/HISAT2/Stats/${sample}_HISAT2_alignment_summary
 
 echo
 echo 'alignment complete'
@@ -170,7 +170,7 @@ ml SAMtools/1.16.1-GCC-11.3.0
 
 echo
 echo 'Converting SAM to BAM and sorting...'
-samtools sort -@ 10 $OUTDIR/Alignment/HISAT2/SAM/${SLURM_ARRAY_TASK_ID}.sam -o $OUTDIR/Alignment/HISAT2/BAM/${SLURM_ARRAY_TASK_ID}.bam
+samtools sort -@ 10 $OUTDIR/Alignment/HISAT2/SAM/${sample}.sam -o $OUTDIR/Alignment/HISAT2/BAM/${sample}.bam
 
 echo 'Sorting and conversion complete.'
 
