@@ -105,7 +105,8 @@ echo
 echo 'Trimming raw reads and performing FastQC...'
 echo
 
-trim_galore --cores 4 --fastqc --fastqc_args "--outdir $OUTDIR/TrimmedQC" -stringency 3 -o $OUTDIR/TrimmedReads --paired  $OUTDIR/Data/Raw/${sample}/${sample}_1.fq.gz $OUTDIR/Data/Raw/${sample}/${sample}_2.fq.gz
+#trim_galore --cores 4 --fastqc --fastqc_args "--outdir $OUTDIR/TrimmedReadQC" -stringency 3 -o $OUTDIR/TrimmedReads --paired  $OUTDIR/Data/Raw/${sample}/${sample}_1.fq.gz $OUTDIR/Data/Raw/${sample}/${sample}_2.fq.gz
+fastqc -o $OUTDIR/TrimmedReadQC -t 10 $OUTDIR/TrimmedReads/*.gz
 
 echo
 echo 'trimming complete.'
