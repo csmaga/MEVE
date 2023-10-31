@@ -1,10 +1,10 @@
 #!/bin/bash
-#SBATCH --job-name=MEVE Alignment
+#SBATCH --job-name=MEVE_alignment
 #SBATCH --partition=highmem_p
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=300G
-#SBATCH --time=7-0
+#SBATCH --time=72:00:00
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
 #SBATCH --mail-user=crs12448@uga.edu
 #SBATCH --mail-type=END,FAIL
@@ -136,6 +136,11 @@ then
     mkdir -p $OUTDIR/Alignment
 fi
 
+if [ ! -d $OUTDIR/Alignment/HISAT2/SAM]
+then
+    mkdir -p $OUTDIR/Alignment/HISAT2/SAM
+fi
+
 if [ ! -d $OUTDIR/Alignment/HISAT2/Genome_Index]
 then
     echo 'Genome index directory not found.'
@@ -157,8 +162,6 @@ then
     mkdir $OUTDIR/Alignment/HISAT2/BAM
 fi
 
-cd $OUTDIR/Alignment/HISAT2/BAM
-
 echo 
 echo 'Load modules...'
 echo
@@ -169,8 +172,7 @@ echo
 echo 'Converting SAM to BAM and sorting...'
 samtools sort -@ 10 $OUTDIR/Alignment/HISAT2/SAM/${SLURM_ARRAY_TASK_ID}.sam -o $OUTDIR/Alignment/HISAT2/BAM/${SLURM_ARRAY_TASK_ID}.bam
 
-samtools sort $OUTDIR//* .bam -o $OUTDIR/DEVAGE22_EM-SEQ/bismark_alignment/*_sorted .bam
-echo 'sorting complete'
+echo 'Sorting and conversion complete.'
 
 date
 
