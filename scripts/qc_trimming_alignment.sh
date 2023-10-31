@@ -10,19 +10,17 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --array=1-50 
 
-file=$(awk "NR==${SLURM_ARRAY_TASK_ID}" input.lst)
+file=$(awk "NR==${SLURM_ARRAY_TASK_ID}" input.list)
 
 ## make project directory + make directory for ref genome
-if [ ! -d $OUTDIR/MEVE ]
-then
-    mkdir -p $OUTDIR/MEVE
-fi
-if [ ! -d $OUTDIR/MEVE/Genome ]
+OUTDIR="/scratch/crs12448/MEVE"
+
+if [ ! -d $OUTDIR/Genome ]
 then
     echo 'There is no genome folder.'
 fi
 
-OUTDIR="/scratch/crs12448/MEVE"
+
 
 echo
 echo "******************       BEGIN PIPELINE       **********************"
