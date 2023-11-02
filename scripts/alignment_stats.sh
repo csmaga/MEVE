@@ -16,5 +16,5 @@ ml  SAMtools/1.16.1-GCC-11.3.0
 for i in *.bam
 do
 echo i
-samtools flagstat i > /scratch/crs12448/MEVE/Alignment/Stats/i_stats
+samtools flagstat i > /scratch/crs12448/MEVE/Alignment/Stats/{i}_stats
 done
