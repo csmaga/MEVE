@@ -20,7 +20,7 @@ all_samples <- c("S231.bam", "S242.bam", "S246.bam", "S247.bam", "S252.bam", "S2
                 "S337.bam",  "S338.bam", "S344.bam", "S345.bam", "S348.bam", "S350.bam", "S353.bam", "S357.bam", "S359.bam", "S367.bam", "S376.bam", "S380.bam", "S384.bam",
                 "S388.bam", "S391.bam", "S392.bam", "S393.bam", "S406.bam", "S407.bam", "S408.bam", "S416.bam", "S420.bam", "S421.bam", "S422.bam", "S425.bam", 
                 "S426.bam", "S427.bam", "S432.bam", "S433.bam", "S435.bam")
-all_samples
+summary(all_samples)
 
 # Create a new object for BAM files in a single list
 BAM_files<- BamFileList(all_samples)
@@ -40,6 +40,11 @@ gene_counts
 
 counts_matrix <- assays(gene_counts)
 counts_annotations <- rowRanges(gene_counts)
+
+dim(counts_matrix)
+dim(counts_annotations)
+
+save.image()
 
 write.csv(counts_matrix, '/scratch/crs12448/MEVE/ReadCounts/MEVE_read_counts.csv')
 write.csv(counts_annotations, '/scratch/crs12448/MEVE/ReadCounts/MEVE_read_counts_annotation.csv')
