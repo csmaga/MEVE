@@ -9,12 +9,16 @@
 #SBATCH --mail-user=christopher.smaga@uga.edu               
 #SBATCH --mail-type=END,FAIL                            
 
-cd /scratch/crs12448/MEVE/Alignment/HISAT2/BAM
+cd /scratch/crs12448/MEVE/Alignment/HISAT2/Stats
 
-ml  SAMtools/1.16.1-GCC-11.3.0
+# ml  SAMtools/1.16.1-GCC-11.3.0
 
-for file in *.bam
-do
-echo $file
-samtools flagstat $file > /scratch/crs12448/MEVE/Alignment/HISAT2/Stats/${file}_stats
-done
+# for file in *.bam
+# do
+# echo $file
+# samtools flagstat $file > /scratch/crs12448/MEVE/Alignment/HISAT2/Stats/${file}_stats
+# done
+
+tail -n +1 *stats > alignment_stats
+
+
