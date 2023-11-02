@@ -62,12 +62,20 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 
 # # Variant calling 
 
+mkdir $OUTDIR/GATK/BamFix
+
+gatk --java-options "-Xmx4g" AddOrReplaceReadGroups \
+        I=$OUTDIR/GATK/SplitNCigarReads/${sample}_cigar.bam \
+        O=$OUTDIR/GATK/BamFix/${sample}_cigar_fix.bam \
+        SORT_ORDER=coordinate  RGLB=seq  RGPU=1 RGPL=illumina  RGSM=${sample}.bam  \
+        CREATE_INDEX=True
+
 # #Make directory for vcf files
 mkdir mkdir $OUTDIR/GATK/HaplotypeCaller
 
 gatk --java-options "-Xmx4g" HaplotypeCaller  \
   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-  -I $OUTDIR/GATK/SplitNCigarReads/${sample}_cigar.bam \
+  -I $OUTDIR/GATK/BamFix/${sample}_cigar_fix.bam \
   -O $OUTDIR/GATK/HaplotypeCaller/${sample}.g.vcf.gz \
   -ERC GVCF
 
