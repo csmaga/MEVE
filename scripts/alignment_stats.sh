@@ -13,5 +13,8 @@ cd "/scratch/crs12448/MEVE/Alignment/HISAT2/BAM"
 
 ml  SAMtools/1.16.1-GCC-11.3.0
 
-samtools flagstat *.bam > /scratch/crs12448/MEVE/Alignment/Stats/*_stats
-
+for i in *.bam
+do
+echo i
+samtools flagstat i > /scratch/crs12448/MEVE/Alignment/Stats/i_stats
+done
