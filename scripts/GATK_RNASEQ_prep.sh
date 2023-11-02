@@ -26,18 +26,18 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 
 mkdir $OUTDIR/GATK/MarkDuplicates
 
- gatk -jar picard.jar MarkDuplicates \
+ gatk MarkDuplicates \
      I=$OUTDIR/Alignment/HISAT2/BAM/${sample}.bam \
      O=$OUTDIR/GATK/MarkDuplicates/${sample}_mark_dup.bam} \
      M=$OUTDIR/GATK/MarkDuplicates/${sample}_mark_dup_metrics.txt}
 
 # SplitNCigar reads to split reads at "N"s (new read to the left and to the right of the N). Not sure exactly why this is necessary....
-#  mkdir $OUTDIR/GATK/SplitNCigarReads
+ mkdir $OUTDIR/GATK/SplitNCigarReads
 
-#  gatk SplitNCigarReads \
-#    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-#    -I $OUTDIR/GATK/MarkDuplicates/${sample}_mark_dup.bam  \
-#    -O $OUTDIR/GATK/SplitNCigarReads/${sample}_cigar.bam
+ gatk SplitNCigarReads \
+   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+   -I $OUTDIR/GATK/MarkDuplicates/${sample}_mark_dup.bam  \
+   -O $OUTDIR/GATK/SplitNCigarReads/${sample}_cigar.bam
 
 # # Recalibration of base quality
 # mkdir $OUTDIR/GATK/Recalibration
