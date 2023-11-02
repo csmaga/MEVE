@@ -15,6 +15,6 @@ ml  SAMtools/1.16.1-GCC-11.3.0
 
 for file in *.bam
 do
-echo file
-samtools flagstat i > /scratch/crs12448/MEVE/Alignment/HISAT2/Stats/{file}_stats
+echo $file
+samtools flagstat $file > /scratch/crs12448/MEVE/Alignment/HISAT2/Stats/${file}_stats
 done
