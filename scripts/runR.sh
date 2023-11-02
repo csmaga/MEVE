@@ -13,4 +13,4 @@ cd /scratch/crs12448/MEVE/R
 
 ml R/4.3.1-foss-2022a
 
-R CMD BATCH ~/MEVE/scripts/GenomicFeatures_count_reads.r
+R CMD BATCH ~/MEVE/scripts/GenomicFeatures_count_reads.R
