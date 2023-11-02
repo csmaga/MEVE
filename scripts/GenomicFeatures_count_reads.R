@@ -1,11 +1,11 @@
- if (!require("BiocManager", quietly = TRUE))
-     install.packages("BiocManager")
-
- BiocManager::install("GenomicFeatures")
- if (!require("BiocManager", quietly = TRUE))
-     install.packages("BiocManager")
-
- BiocManager::install("GenomicAlignments")
+ # if (!require("BiocManager", quietly = TRUE))
+ #     install.packages("BiocManager")
+ # 
+ # BiocManager::install("GenomicFeatures")
+ # if (!require("BiocManager", quietly = TRUE))
+ #     install.packages("BiocManager")
+ # 
+ # BiocManager::install("GenomicAlignments")
 
 
 library(GenomicAlignments)
@@ -26,7 +26,7 @@ summary(all_samples)
 BAM_files<- BamFileList(all_samples)
 #
 # # Create a storage object for GTF annotations
-txdb <- makeTxDbFromGFF("/scratch/crs12448/MEVE/Genome/Amiss.annot.20222.gff", circ_seqs = character())
+txdb <- makeTxDbFromGFF("/scratch/crs12448/MEVE/Genome/Amiss.annot.2022.gff", circ_seqs = character())
 txdb
 keytypes(txdb)
 
