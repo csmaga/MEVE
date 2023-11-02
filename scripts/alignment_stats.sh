@@ -9,12 +9,12 @@
 #SBATCH --mail-user=christopher.smaga@uga.edu               
 #SBATCH --mail-type=END,FAIL                            
 
-cd "/scratch/crs12448/MEVE/Alignment/HISAT2/BAM"
+cd /scratch/crs12448/MEVE/Alignment/HISAT2/BAM
 
 ml  SAMtools/1.16.1-GCC-11.3.0
 
-for i in *.bam
+for file in *.bam
 do
-echo i
-samtools flagstat i > /scratch/crs12448/MEVE/Alignment/HISAT2/Stats/{i}_stats
+echo file
+samtools flagstat i > /scratch/crs12448/MEVE/Alignment/HISAT2/Stats/{file}_stats
 done
