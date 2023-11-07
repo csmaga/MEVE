@@ -84,15 +84,80 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 # or quality.
 
 #Change directory to where files are
-cd $OUTDIR/GATK/HaplotypeCaller/
+#cd $OUTDIR/GATK/HaplotypeCaller/
 
 #Create directory for output
-mkdir $OUTDIR/GATK/HaplotypeCaller/Filter_1
+#mkdir $OUTDIR/GATK/HaplotypeCaller/Filter_1
 
 #Load modules
-ml VCFtools/0.1.16-GCC-11.2.0
+#ml VCFtools/0.1.16-GCC-11.2.0
 
 #Filter each sample so the minimum read depth is 20 and quality score is 30. This should reduce the total
 # number of sites to a more manageable level before genotyping
-vcftools --gzvcf ${sample}.g.vcf.gz --minQ 30 --min-meanDP 20 --recode --stdout > $OUTDIR/GATK/HaplotypeCaller/Filter_1/${sample}_filtered.g.vcf
+#vcftools --gzvcf ${sample}.g.vcf.gz --minQ 30 --min-meanDP 20 --recode --stdout > $OUTDIR/GATK/HaplotypeCaller/Filter_1/${sample}_filtered.g.vcf
 
+# Now that we have done a first pass filter, combine the GVCF files to perform genotyping across all individuals. Here, I am removing the two libraries with limited reads (S256 and S266). The _2 are the new ones with high coverage.
+
+#Combine GVCFs
+cd $OUTDIR/GATK/HaplotypeCaller/Filter_1
+mkdir $OUTDIR/GATK/GenotypeGVCFs
+
+gatk --java-options CombineGVCFs \
+   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+ --variant S231_filtered.g.vcf \
+ --variant S242_filtered.g.vcf \
+ --variant S246_filtered.g.vcf \
+ --variant S247_filtered.g.vcf \
+ --variant S252_filtered.g.vcf \
+ --variant S256_2_filtered.g.vcf \
+ --variant S263_filtered.g.vcf \
+ --variant S266_2_filtered.g.vcf \
+ --variant S280_filtered.g.vcf \
+ --variant S295_filtered.g.vcf \
+ --variant S302_filtered.g.vcf \
+ --variant S303_filtered.g.vcf \
+ --variant S314_filtered.g.vcf \
+ --variant S316_filtered.g.vcf \
+ --variant S317_filtered.g.vcf \
+ --variant S319_filtered.g.vcf \
+ --variant S328_filtered.g.vcf \
+ --variant S336_filtered.g.vcf \
+ --variant S337_filtered.g.vcf \
+ --variant S338_filtered.g.vcf \
+ --variant S344_filtered.g.vcf \
+ --variant S345_filtered.g.vcf \
+ --variant S348_filtered.g.vcf \
+ --variant S350_filtered.g.vcf \
+ --variant S353_filtered.g.vcf \
+ --variant S357_filtered.g.vcf \
+ --variant S359_filtered.g.vcf \
+ --variant S367_filtered.g.vcf \
+ --variant S376_filtered.g.vcf \
+ --variant S380_filtered.g.vcf \
+ --variant S384_filtered.g.vcf \
+ --variant S388_filtered.g.vcf \
+ --variant S391_filtered.g.vcf \
+ --variant S392_filtered.g.vcf \
+ --variant S393_filtered.g.vcf \
+ --variant S406_filtered.g.vcf \
+ --variant S407_filtered.g.vcf \
+ --variant S408_filtered.g.vcf \
+ --variant S416_filtered.g.vcf \
+ --variant S420_filtered.g.vcf \
+ --variant S421_filtered.g.vcf \
+ --variant S422_filtered.g.vcf \
+ --variant S425_filtered.g.vcf \
+ --variant S426_filtered.g.vcf \
+ --variant S427_filtered.g.vcf \
+ --variant S432_filtered.g.vcf \
+ --variant S433_filtered.g.vcf \
+ --variant S435_filtered.g.vcf \
+ -O $OUTDIR/GATK/GenotypeGVCFs/all_samples.g.vcf
+
+ # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
+cd $OUTDIR/GATK/GenotypeGVCFs
+
+ gatk GenotypeGVCFs \
+   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+   -V all_samples.g.vcf \
+   -O MEVE_variants_1.vcf
