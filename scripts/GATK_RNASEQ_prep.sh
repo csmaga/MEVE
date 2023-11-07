@@ -102,7 +102,7 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 cd $OUTDIR/GATK/HaplotypeCaller/Filter_1
 mkdir $OUTDIR/GATK/GenotypeGVCFs
 
-gatk --java-options CombineGVCFs \
+gatk CombineGVCFs \
    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
  --variant S231_filtered.g.vcf \
  --variant S242_filtered.g.vcf \
