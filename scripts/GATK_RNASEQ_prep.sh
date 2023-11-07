@@ -8,12 +8,12 @@
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
 #SBATCH --mail-user=crs12448@uga.edu
 #SBATCH --mail-type=END,FAIL
-#SBATCH --array=1-50 
 
-sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
+
+#sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
 
 ## make project directory + make directory for ref genome
-OUTDIR="/scratch/crs12448/MEVE"
+#OUTDIR="/scratch/crs12448/MEVE"
 
 # This is based off of the GATK "Best Practices" for RNAseq short variant discovery (SNPs + Indels). Found here: https://gatk.broadinstitute.org/hc/en-us/articles/360035531192-RNAseq-short-variant-discovery-SNPs-Indels-
 
