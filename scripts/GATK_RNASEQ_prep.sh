@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=MEVE_alignment
+#SBATCH --job-name=MEVE_GATK
 #SBATCH --partition=highmem_p
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
@@ -62,21 +62,37 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 
 # # Variant calling 
 
-mkdir $OUTDIR/GATK/BamFix
+# mkdir $OUTDIR/GATK/BamFix
 
-gatk --java-options "-Xmx4g" AddOrReplaceReadGroups \
-        I=$OUTDIR/GATK/SplitNCigarReads/${sample}_cigar.bam \
-        O=$OUTDIR/GATK/BamFix/${sample}_cigar_fix.bam \
-        SORT_ORDER=coordinate  RGLB=seq  RGPU=1 RGPL=illumina  RGSM=${sample}.bam  \
-        CREATE_INDEX=True
+# gatk --java-options "-Xmx4g" AddOrReplaceReadGroups \
+#         I=$OUTDIR/GATK/SplitNCigarReads/${sample}_cigar.bam \
+#         O=$OUTDIR/GATK/BamFix/${sample}_cigar_fix.bam \
+#         SORT_ORDER=coordinate  RGLB=seq  RGPU=1 RGPL=illumina  RGSM=${sample}.bam  \
+#         CREATE_INDEX=True
 
 # #Make directory for vcf files
-mkdir mkdir $OUTDIR/GATK/HaplotypeCaller
+# mkdir mkdir $OUTDIR/GATK/HaplotypeCaller
 
-gatk --java-options "-Xmx4g" HaplotypeCaller  \
-  -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-  -I $OUTDIR/GATK/BamFix/${sample}_cigar_fix.bam \
-  -O $OUTDIR/GATK/HaplotypeCaller/${sample}.g.vcf.gz \
-  -ERC GVCF
+# gatk --java-options "-Xmx4g" HaplotypeCaller  \
+#   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#   -I $OUTDIR/GATK/BamFix/${sample}_cigar_fix.bam \
+#   -O $OUTDIR/GATK/HaplotypeCaller/${sample}.g.vcf.gz \
+#   -ERC GVCF
 
+# Filter SNPs (hard filtering to reduce the size of the files). Otherwise, the combined file will be HUGE.
+# I don't think this should be bad because I am hard filtering out any variants that have poor read depth
+# or quality.
+
+#Change directory to where files are
+cd $OUTDIR/GATK/HaplotypeCaller/
+
+#Create directory for output
+mkdir $OUTDIR/GATK/HaplotypeCaller/Filter_1
+
+#Load modules
+ml VCFtools/0.1.16-GCC-11.2.0
+
+#Filter each sample so the minimum read depth is 20 and quality score is 30. This should reduce the total
+# number of sites to a more manageable level before genotyping
+vcftools --vcf ${sample}.g.vcf.gz --minQ 30 --min-meanDP 20 --recode --stdout > $OUTDIR/GATK/HaplotypeCaller/Filter_1/${sample}_filtered.g.vcf
 
