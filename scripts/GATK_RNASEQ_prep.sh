@@ -94,5 +94,5 @@ ml VCFtools/0.1.16-GCC-11.2.0
 
 #Filter each sample so the minimum read depth is 20 and quality score is 30. This should reduce the total
 # number of sites to a more manageable level before genotyping
-vcftools --vcf ${sample}.g.vcf.gz --minQ 30 --min-meanDP 20 --recode --stdout > $OUTDIR/GATK/HaplotypeCaller/Filter_1/${sample}_filtered.g.vcf
+vcftools --gzvcf ${sample}.g.vcf.gz --minQ 30 --min-meanDP 20 --recode --stdout > $OUTDIR/GATK/HaplotypeCaller/Filter_1/${sample}_filtered.g.vcf
 
