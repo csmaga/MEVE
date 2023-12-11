@@ -157,61 +157,61 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 
 #Change directory to where files are
 cd $OUTDIR/GATK/HaplotypeCaller/
-mkdir $OUTDIR/GATK/HaplotypeCaller/
+
 
 # Combine the GVCF files to perform genotyping across all individuals. I am NOT filtering beforehand
 # Here, I am removing the two libraries with limited reads (S256 and S266). The _2 are the new ones with high coverage.
 gatk CombineGVCFs \
    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
- --variant S231.g.vcf \
- --variant S242.g.vcf \
- --variant S246.g.vcf \
- --variant S247.g.vcf \
- --variant S252.g.vcf \
- --variant S256_2.g.vcf \
- --variant S263.g.vcf \
- --variant S266_2.g.vcf \
- --variant S280.g.vcf \
- --variant S295.g.vcf \
- --variant S302.g.vcf \
- --variant S303.g.vcf \
- --variant S314.g.vcf \
- --variant S316.g.vcf \
- --variant S317.g.vcf \
- --variant S319.g.vcf \
- --variant S328.g.vcf \
- --variant S336.g.vcf \
- --variant S337.g.vcf \
- --variant S338.g.vcf \
- --variant S344.g.vcf \
- --variant S345.g.vcf \
- --variant S348.g.vcf \
- --variant S350.g.vcf \
- --variant S353.g.vcf \
- --variant S357.g.vcf \
- --variant S359.g.vcf \
- --variant S367.g.vcf \
- --variant S376.g.vcf \
- --variant S380.g.vcf \
- --variant S384.g.vcf \
- --variant S388.g.vcf \
- --variant S391.g.vcf \
- --variant S392.g.vcf \
- --variant S393.g.vcf \
- --variant S406.g.vcf \
- --variant S407.g.vcf \
- --variant S408.g.vcf \
- --variant S416.g.vcf \
- --variant S420.g.vcf \
- --variant S421.g.vcf \
- --variant S422.g.vcf \
- --variant S425.g.vcf \
- --variant S426.g.vcf \
- --variant S427.g.vcf \
- --variant S432.g.vcf \
- --variant S433.g.vcf \
- --variant S435.g.vcf \
- -O $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf
+ --variant S231.g.vcf.gz \
+ --variant S242.g.vcf.gz \
+ --variant S246.g.vcf.gz \
+ --variant S247.g.vcf.gz \
+ --variant S252.g.vcf.gz \
+ --variant S256_2.g.vcf.gz \
+ --variant S263.g.vcf.gz \
+ --variant S266_2.g.vcf.gz \
+ --variant S280.g.vcf.gz \
+ --variant S295.g.vcf.gz \
+ --variant S302.g.vcf.gz \
+ --variant S303.g.vcf.gz \
+ --variant S314.g.vcf.gz \
+ --variant S316.g.vcf.gz \
+ --variant S317.g.vcf.gz \
+ --variant S319.g.vcf.gz \
+ --variant S328.g.vcf.gz \
+ --variant S336.g.vcf.gz \
+ --variant S337.g.vcf.gz \
+ --variant S338.g.vcf.gz \
+ --variant S344.g.vcf.gz \
+ --variant S345.g.vcf.gz \
+ --variant S348.g.vcf.gz \
+ --variant S350.g.vcf.gz \
+ --variant S353.g.vcf.gz \
+ --variant S357.g.vcf.gz \
+ --variant S359.g.vcf.gz \
+ --variant S367.g.vcf.gz \
+ --variant S376.g.vcf.gz \
+ --variant S380.g.vcf.gz \
+ --variant S384.g.vcf.gz \
+ --variant S388.g.vcf.gz \
+ --variant S391.g.vcf.gz \
+ --variant S392.g.vcf.gz \
+ --variant S393.g.vcf.gz \
+ --variant S406.g.vcf.gz \
+ --variant S407.g.vcf.gz \
+ --variant S408.g.vcf.gz \
+ --variant S416.g.vcf.gz \
+ --variant S420.g.vcf.gz \
+ --variant S421.g.vcf.gz \
+ --variant S422.g.vcf.gz \
+ --variant S425.g.vcf.gz \
+ --variant S426.g.vcf.gz \
+ --variant S427.g.vcf.gz \
+ --variant S432.g.vcf.gz \
+ --variant S433.g.vcf.gz \
+ --variant S435.g.vcf.gz \
+ -O $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz
  # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
 #cd $OUTDIR/GATK/GenotypeGVCFs
 
