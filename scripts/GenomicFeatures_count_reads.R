@@ -32,8 +32,9 @@ txdb
 
 #
 # # Extract all exons grouped within genes - code from MDH and SLB
-#exons_by_genes <- exonsBy(txdb, by="gene")
-#exons_by_genes
+exons_by_genes <- exonsBy(txdb, by="gene")
+exons_by_genes
+write.csv(exons_by_genes, "exons_by_genes.csv")
 
 transcript_lengths <- transcripts(txdb)
 transcript_lengths
