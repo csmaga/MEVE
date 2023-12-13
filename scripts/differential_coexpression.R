@@ -12,10 +12,11 @@ norm_counts_WO<-as.matrix(norm_counts2[-c(1,2,5,7,9,11,14,15,17,19,20,21),])
 
 csd_results <- run_csd(
   x_1 = norm_counts_AP, x_2 = norm_counts_WO,
-  n_it = 10, nThreads = 2L, verbose = FALSE
+  n_it = 10, nThreads = 4L, verbose = FALSE
 )
 
 write.csv(csd_results, "csd_results.csv")
+
 pairs_to_pick <- 100L
 c_filter <- partial_argsort(csd_results$cVal, pairs_to_pick)
 c_frame <- csd_results[c_filter, ]
