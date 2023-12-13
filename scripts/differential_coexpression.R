@@ -7,8 +7,8 @@ setwd("/scratch/crs12448/AP_WO_21/Diff_Coex")
 # Load in normalized and transformed counts
 norm_counts<-read.csv("AP_WO_normalized_counts.csv",row.names="X")
 
-norm_counts_AP<-as.matrix(norm_counts2[c(1,2,5,7,9,11,14,15,17,19,20,21),])
-norm_counts_WO<-as.matrix(norm_counts2[-c(1,2,5,7,9,11,14,15,17,19,20,21),])
+norm_counts_AP<-as.matrix(norm_counts[c(1,2,5,7,9,11,14,15,17,19,20,21),])
+norm_counts_WO<-as.matrix(norm_counts[-c(1,2,5,7,9,11,14,15,17,19,20,21),])
 
 csd_results <- run_csd(
   x_1 = norm_counts_AP, x_2 = norm_counts_WO,
