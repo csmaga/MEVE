@@ -2,7 +2,7 @@
 #SBATCH --job-name=MEVE_GATK
 #SBATCH --partition=highmem_p
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=10
+#SBATCH --cpus-per-task=1
 #SBATCH --mem=300G
 #SBATCH --time=72:00:00
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
@@ -215,7 +215,45 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
  # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
 cd $OUTDIR/GATK/GenotypeGVCFs
 
- gatk GenotypeGVCFs \
-   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-   -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
-   -O MEVE_variants_unfiltered.vcf
+#  gatk GenotypeGVCFs \
+#    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#    -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
+#    -O MEVE_variants_unfiltered.vcf
+
+# Filter SNPs
+#ml  VCFtools: VCFtools/0.1.16-GCC-11.2.0
+
+#vcftools --gvcf MEVE_variants_unfiltered.g.vcf --remove-indels --maf 0.1 --max-missing 0.9 --minQ 30 --min-meanDP 10 --minDP 10 --recode --stdout > $OUTDIR/Filtered/MEVE_SNPs_filter_1.vcf
+#vcftools --gvcf MEVE_variants_unfiltered.g.vcf --remove-indels --maf 0.05 --max-missing 0.9 --minQ 30 --min-meanDP 10 --minDP 10 --recode --stdout > Filtered/MEVE_SNPs_filter_2.vcf
+#vcftools --gvcf MEVE_variants_unfiltered.g.vcf --remove-indels --maf 0.1 --max-missing 0.95 --minQ 30 --min-meanDP 10 --minDP 10 --recode --stdout > $OUTDIR/Filtered/MEVE_SNPs_filter_3.vcf
+#vcftools --gvcf MEVE_variants_unfiltered.g.vcf --remove-indels --maf 0.05 --max-missing 0.95 --minQ 30 --min-meanDP 10 --minDP 10 --recode --stdout > $OUTDIR/Filtered/MEVE_SNPs_filter_4.vcf
+#vcftools --gvcf MEVE_variants_unfiltered.g.vcf --remove-indels --maf 0.1 --max-missing 0.85 --minQ 30 --min-meanDP 10 --minDP 10 --recode --stdout > $OUTDIR/Filtered/MEVE_SNPs_filter_5.vcf
+#vcftools --gvcf MEVE_variants_unfiltered.g.vcf --remove-indels --maf 0.05 --max-missing 0.85 --minQ 30 --min-meanDP 10 --minDP 10 --recode --stdout > $OUTDIR/Filtered/MEVE_SNPs_filter_6.vcf
+
+
+# First, filter by depth - only retain sites (SNPs) that have a quality above 30 (all of them in this case) and min mean depth of 10.
+#vcftools --gzvcf MEVE_SNPs_filter_depth.vcf --remove-indels --min-meanDP 10 --recode --stdout > Filtered/MEVE_SNPs_filter_depth_sdpth.vcf # 180443 sites remaining
+
+
+#vcftools --gvcf MEVE_variants_unfiltered.vcf.gz --remove-indels --minQ 30 --minDP 10 --recode --stdout > Filtered/MEVE_SNPs_filter_depth.vcf
+#bcftools query -f "A\n" MEVE_SNPs_filter_depth.vcf | wc -l
+
+# 1561991 sites retained
+
+# Now, filter by missing data. Only retain sites present in at least 95%, 90%, 85% of individuals 
+
+
+
+
+#vcftools --gvcf MEVE_SNPs_filter_depth.vcf --remove-indels --max-missing 0.95 --recode --stdout > Filtered/MEVE_SNPs_filter_depth_m95.vcf # 48972 sites remaining
+#vcftools --gvcf MEVE_variants_unfiltered.vcf.gz --remove-indels --max-missing 0.90 --recode --stdout > Filtered/MEVE_SNPs_filter_depth_m90.vcf
+#vcftools --gvcf MEVE_variants_unfiltered.vcf.gz --remove-indels --max-missing 0.85 --recode --stdout > Filtered/MEVE_SNPs_filter_depth_m85.vcf
+
+gatk VariantFiltration -V MEVE_variants_unfiltered.vcf.gz  --filter-expression "QD < 2.0" --filter-name "QD2" \
+ --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
+ --filter-expression "SOR > 3.0" --filter-name "SOR3" \
+ --filter-expression "FS > 60.0" --filter-name "FS60" \
+ --filter-expression "MQ < 40.0" --filter-name "MQ40" \
+ --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
+ --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
+ -O Filtered/MEVE_SNPs.filtered.vcf.gz
