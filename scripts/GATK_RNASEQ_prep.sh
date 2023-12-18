@@ -249,6 +249,10 @@ cd $OUTDIR/GATK/GenotypeGVCFs
 #vcftools --gvcf MEVE_variants_unfiltered.vcf.gz --remove-indels --max-missing 0.90 --recode --stdout > Filtered/MEVE_SNPs_filter_depth_m90.vcf
 #vcftools --gvcf MEVE_variants_unfiltered.vcf.gz --remove-indels --max-missing 0.85 --recode --stdout > Filtered/MEVE_SNPs_filter_depth_m85.vcf
 
+ gatk IndexFeatureFile \
+     -F MEVE_variants_unfiltered.vcf.gz
+
+
 gatk VariantFiltration -V MEVE_variants_unfiltered.vcf.gz  --filter-expression "QD < 2.0" --filter-name "QD2" \
  --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
  --filter-expression "SOR > 3.0" --filter-name "SOR3" \
