@@ -23,7 +23,6 @@ module load StringTie/2.2.1-GCC-11.3.0
 #
 # # the alignment files from HISAT2 have already been sorted with samtools as BAM files
 for i in S231.bam S242.bam S246.bam S247.bam S252.bam S256_2.bam S263.bam S266_2.bam S280.bam S295.bam S302.bam S303.bam S314.bam S316.bam S317.bam S319.bam S328.bam S336.bam S337.bam S338.bam S344.bam S345.bam S348.bam S350.bam S353.bam S357.bam S359.bam S367.bam S376.bam S380.bam S384.bam S388.bam S391.bam S392.bam S393.bam S406.bam S407.bam S408.bam S416.bam S420.bam S421.bam S422.bam S425.bam S426.bam S427.bam S432.bam S433.bam S435.bam;
- ;
 do
   stringtie -p 8 -G /scratch/crs12448/MEVE/Genome/Amiss.annot.2022.gff -o $OD/assemblies/${i} ${i/.bam/.gtf}
 done
