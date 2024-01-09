@@ -12,7 +12,7 @@
 #Output directory for all StringTie analyses
 OD="/scratch/crs12448/work/MEVE/StringTie"
 
-cd /scratch/crs12448/work/PREE2/HISAT2/Alignments/TrimmedAlignments/BAM
+cd /scratch/crs12448/MEVE/Alignment/HISAT2/BAM
 
 samples=/scratch/crs12448/MEVE/Alignment/HISAT2/BAM/sample_list
 
@@ -22,9 +22,9 @@ module load StringTie/2.2.1-GCC-11.3.0
 #
 #
 # # the alignment files from HISAT2 have already been sorted with samtools as BAM files
-for i in S231.bam S246.bam ;
+for i in S231.bam S242.bam;
 do
-  stringtie -p 8 -G /scratch/crs12448/MEVE/Genome/Amiss.annot.2022.gtf -o $OD/assemblies/${i/.bam/.gtf} ${i}
+  stringtie -p 8 -G /scratch/crs12448/MEVE/Genome/Amiss.annot.2022.gf -o $OD/assemblies/${i/.bam/.gtf} ${i}
 done
 
 cd /scratch/crs12448/MEVE/StringTie/assemblies
