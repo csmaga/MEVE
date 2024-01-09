@@ -17,7 +17,8 @@ cd /scratch/crs12448/work/PREE2/HISAT2/Alignments/TrimmedAlignments/BAM
 samples=/scratch/crs12448/MEVE/Alignment/HISAT2/BAM/sample_list
 
 # # load StringTie
-module load StringTie/2.1.7-GCC-8.3.0
+module load StringTie/2.2.1-GCC-11.3.0
+
 #
 #
 # # the alignment files from HISAT2 have already been sorted with samtools as BAM files
@@ -34,13 +35,14 @@ stringtie --merge -i -p 8 -G /scratch/crs12448/MEVE/Genome/Amiss.annot.2022.gff 
 mkdir /scratch/crs12448/MEVE/StringTie/GFFcompare
 cd /scratch/crs12448/MEVE/StringTie/GFFcompare
 #
-module load GffCompare/0.11.6-GCCcore-8.3.0
+module load GffCompare/0.12.6-GCC-11.2.0
 
 # #Compare assembled annotation to the original GTF
 gffcompare /scratch/crs12448/MEVE/assemblies/stringtie_merged.gtf -r /scratch/MEVE/Genome/Amiss.annot.2022.gtf -G -M -o gtf_comp
 # ## M option indicates gffcompare should ignore single-exon transfags and reference transcripts
 #
-module load gffread/0.11.6-GCCcore-8.3.0
+module load gffread/0.12.7-GCCcore-11.3.0
+
 
 mkdir /scratch/crs12448/MEVE/StringTie/sequences
 cd /scratch/crs12448/MEVE/StringTie/sequences
@@ -48,15 +50,15 @@ cd /scratch/crs12448/MEVE/StringTie/sequences
 gffread -F -w transcript_seqs.fa -g /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta /scratch/crs12448/MEVE/assemblies/stringtie_merged.gtf
 
 
-module load BLAST+/2.12.0-gompi-2020b
-cd /scratch/crs12448/work/PREE2/StringTie/BLAST
+#module load BLAST+/2.12.0-gompi-2020b
+#cd /scratch/crs12448/work/PREE2/StringTie/BLAST
 
 ## code below downloads the UniprotKB Swiss-Prot database - a high quality, manually annotated and non-redundant protein sequence database
-wget "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
-gunzip uniprot_sprot.fasta.gz
+#wget "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
+#gunzip uniprot_sprot.fasta.gz
 
 ## code below creates a blast database from the previously downloaded Uniprot database
-makeblastdb -in uniprot_sprot.fasta -dbtype prot -out uniprot_sprot_database
+#makeblastdb -in uniprot_sprot.fasta -dbtype prot -out uniprot_sprot_database
 
 # ## Break fasta file with assembled transcripts into smaller parts (10000 sequences each)
 # awk 'BEGIN {n_seq=0;} /^>/ {if(n_seq%10000==0){file=sprintf("myseq%d.fa",n_seq);} print >> file; n_seq++; next;} { print >> file; }' < /scratch/crs12448/work/PREE2/StringTie/GFFcompare/transcript_seqs.fa
