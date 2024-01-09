@@ -1,14 +1,13 @@
 #!/bin/bash
+#SBATCH --job-name=MEVE_characer
 #SBATCH --partition=highmem_p
-#SBATCH --mail-user=christopher.smaga@uga.edu
-#SBATCH --mail-type=END,FAIL
-#SBATCH --job-name=transcript_characterization
-#SBATCH --nodes=1
+#SBATCH --ntasks=1
 #SBATCH --cpus-per-task=10
 #SBATCH --mem=300G
 #SBATCH --time=72:00:00
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
-
+#SBATCH --mail-user=crs12448@uga.edu
+#SBATCH --mail-type=END,FAIL
 
 #Output directory for all StringTie analyses
 OD="/scratch/crs12448/work/MEVE/StringTie"
