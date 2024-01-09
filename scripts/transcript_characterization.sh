@@ -4,7 +4,7 @@
 #SBATCH --mail-type=END,FAIL
 #SBATCH --job-name=transcript_characterization
 #SBATCH --nodes=1
-#SBATCH --ntasks-per-node=20
+#SBATCH --cpus-per-task=10
 #SBATCH --mem=300G
 #SBATCH --time=72:00:00
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
