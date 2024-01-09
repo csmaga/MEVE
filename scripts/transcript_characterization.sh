@@ -24,7 +24,7 @@ module load StringTie/2.2.1-GCC-11.3.0
 # # the alignment files from HISAT2 have already been sorted with samtools as BAM files
 for i in $samples
 do
-  stringtie -p 8 -G /home/crs12448/ALL_METH_PROJ/Amiss.annot.2022.gff -o $OD/assemblies/${i/.bam/.gtf} ${i}
+  stringtie -p 8 -G /scratch/crs12448/MEVE/Genome/Amiss.annot.2022.gff -o $OD/assemblies/${i/.bam/.gtf} ${i}
 done
 
 cd /scratch/crs12448/MEVE/StringTie/assemblies
