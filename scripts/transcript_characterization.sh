@@ -50,7 +50,9 @@ module load gffread/0.12.7-GCCcore-11.3.0
 #gffread -F -w transcript_seqs.fa -g /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta /scratch/crs12448/MEVE/StringTie/assemblies/stringtie_merged.gtf
 
 
-module load BLAST/2.2.26-Linux_x86_64
+module load BLAST+/2.13.0-gompi-2022a
+# Originally did this with BLAST module, but the makeblastdb funciton is not there. Trying with BLAST+ which I think is just a newer BLAST.
+
 cd /scratch/crs12448/MEVE/StringTie/BLAST
 
 ## code below downloads the UniprotKB Swiss-Prot database - a high quality, manually annotated and non-redundant protein sequence database
