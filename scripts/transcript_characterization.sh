@@ -38,7 +38,7 @@ cd /scratch/crs12448/MEVE/StringTie/GFFcompare
 module load GffCompare/0.12.6-GCC-11.2.0
 
 # #Compare assembled annotation to the original GTF
-gffcompare /scratch/crs12448/MEVE/assemblies/stringtie_merged.gtf -r /scratch/MEVE/Genome/Amiss.annot.2022.gtf -G -M -o gtf_comp
+gffcompare /scratch/crs12448/MEVE/StringTie/assemblies/stringtie_merged.gtf -r /scratch/MEVE/Genome/Amiss.annot.2022.gtf -G -M -o gtf_comp
 # ## M option indicates gffcompare should ignore single-exon transfags and reference transcripts
 #
 module load gffread/0.12.7-GCCcore-11.3.0
@@ -47,7 +47,7 @@ module load gffread/0.12.7-GCCcore-11.3.0
 mkdir /scratch/crs12448/MEVE/StringTie/sequences
 cd /scratch/crs12448/MEVE/StringTie/sequences
 # Extract fasta sequennces from the merged GTF file for each transcript discovered
-gffread -F -w transcript_seqs.fa -g /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta /scratch/crs12448/MEVE/assemblies/stringtie_merged.gtf
+gffread -F -w transcript_seqs.fa -g /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta /scratch/crs12448/MEVE/StringTie/assemblies/stringtie_merged.gtf
 
 
 #module load BLAST+/2.12.0-gompi-2020b
