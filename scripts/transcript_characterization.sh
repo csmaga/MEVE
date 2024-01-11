@@ -75,7 +75,9 @@ sequences=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/StringTie/se
 
 cd /scratch/crs12448/MEVE/StringTie/BLAST
 
-blastx -query /scratch/crs12448/MEVE/StringTie/sequences/seq_bins/${sequences} -db uniprot_sprot_database -out blasted_${sample} -outfmt 5 -evalue 0.0001 -num_threads 10
+blastx -query /scratch/crs12448/MEVE/StringTie/sequences/seq_bins/${sequences} -db uniprot_sprot_database -out blasted_${sequences} -outfmt 5 -evalue 0.0001 -num_threads 10
+
+## IGNORE below codes - this was before I knew how to use arrays 
 # blastx -query myseq10000.fa -db uniprot_sprot_database -out Merged_assembly_Blastx10000 -outfmt 5 -evalue 0.0001 -num_threads 20
 # blastx -query myseq20000.fa -db uniprot_sprot_database -out Merged_assembly_Blastx20000 -outfmt 5 -evalue 0.0001 -num_threads 20
 # blastx -query myseq30000.fa -db uniprot_sprot_database -out Merged_assembly_Blastx30000 -outfmt 5 -evalue 0.0001 -num_threads 20
