@@ -38,30 +38,31 @@ cd /scratch/crs12448/MEVE/StringTie/GFFcompare
 module load GffCompare/0.12.6-GCC-11.2.0
 
 # #Compare assembled annotation to the original GTF
-gffcompare /scratch/crs12448/MEVE/StringTie/assemblies/stringtie_merged.gtf -r /scratch/MEVE/Genome/Amiss.annot.2022.gtf -G -M -o gtf_comp
+gffcompare /scratch/crs12448/MEVE/StringTie/assemblies/stringtie_merged.gtf -r /scratch/MEVE/Genome/Amiss.annot.2022.gff -G -M -o gtf_comp
 # ## M option indicates gffcompare should ignore single-exon transfags and reference transcripts
 #
 module load gffread/0.12.7-GCCcore-11.3.0
 
 
-mkdir /scratch/crs12448/MEVE/StringTie/sequences
-cd /scratch/crs12448/MEVE/StringTie/sequences
+#mkdir /scratch/crs12448/MEVE/StringTie/sequences
+#cd /scratch/crs12448/MEVE/StringTie/sequences
 # Extract fasta sequennces from the merged GTF file for each transcript discovered
-gffread -F -w transcript_seqs.fa -g /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta /scratch/crs12448/MEVE/StringTie/assemblies/stringtie_merged.gtf
+#gffread -F -w transcript_seqs.fa -g /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta /scratch/crs12448/MEVE/StringTie/assemblies/stringtie_merged.gtf
 
 
-#module load BLAST+/2.12.0-gompi-2020b
-#cd /scratch/crs12448/work/PREE2/StringTie/BLAST
+module load BLAST/2.2.26-Linux_x86_64
+cd /scratch/crs12448/MEVE/StringTie/BLAST
 
 ## code below downloads the UniprotKB Swiss-Prot database - a high quality, manually annotated and non-redundant protein sequence database
-#wget "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
-#gunzip uniprot_sprot.fasta.gz
+wget "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
+gunzip uniprot_sprot.fasta.gz
 
 ## code below creates a blast database from the previously downloaded Uniprot database
-#makeblastdb -in uniprot_sprot.fasta -dbtype prot -out uniprot_sprot_database
+makeblastdb -in uniprot_sprot.fasta -dbtype prot -out uniprot_sprot_database
 
+cd /scratch/crs12448/MEVE/StringTie/sequences/seq_bins
 # ## Break fasta file with assembled transcripts into smaller parts (10000 sequences each)
-# awk 'BEGIN {n_seq=0;} /^>/ {if(n_seq%10000==0){file=sprintf("myseq%d.fa",n_seq);} print >> file; n_seq++; next;} { print >> file; }' < /scratch/crs12448/work/PREE2/StringTie/GFFcompare/transcript_seqs.fa
+awk 'BEGIN {n_seq=0;} /^>/ {if(n_seq%10000==0){file=sprintf("myseq%d.fa",n_seq);} print >> file; n_seq++; next;} { print >> file; }' < /scratch/crs12448/MEVE/StringTie/sequences/transcript_seqs.fa
 
 # ## the blastx algorithm will translate the sequence in 3 reading frames in the forward direction and 3 reading frames in the reverse direction to generate the amino acid sequences for the search
 # blastx -query myseq0.fa -db uniprot_sprot_database -out Merged_assembly_Blastx0 -outfmt 5 -evalue 0.0001 -num_threads 20
