@@ -1,9 +1,9 @@
 #!/bin/bash
 #SBATCH --job-name=MEVE_GATK
-#SBATCH --partition=highmem_p
+#SBATCH --partition=batch
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=300G
+#SBATCH --mem=24G
 #SBATCH --time=72:00:00
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
 #SBATCH --mail-user=crs12448@uga.edu
@@ -19,8 +19,8 @@ OUTDIR="/scratch/crs12448/MEVE"
 
 # First, mark duplicate reads from the bam files.
 
-ml Java/17.0.6
-ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
+#ml Java/17.0.6
+#ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 
 # Run MarkDuplicates to mark duplicate reads from RNAseq data. For each file in the DD, perform the mark duplicates function. Calling on JAVA with 64GB and 8 cores
 
@@ -213,7 +213,7 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 #  --variant S435.g.vcf.gz \
 #  -O $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz
  # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
-cd $OUTDIR/GATK/GenotypeGVCFs
+#cd $OUTDIR/GATK/GenotypeGVCFs
 
 #  gatk GenotypeGVCFs \
 #    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
@@ -221,7 +221,7 @@ cd $OUTDIR/GATK/GenotypeGVCFs
 #    -O MEVE_variants_unfiltered.vcf
 
 # Filter SNPs
-#ml  VCFtools: VCFtools/0.1.16-GCC-11.2.0
+
 
 #vcftools --gvcf MEVE_variants_unfiltered.g.vcf --remove-indels --maf 0.1 --max-missing 0.9 --minQ 30 --min-meanDP 10 --minDP 10 --recode --stdout > $OUTDIR/Filtered/MEVE_SNPs_filter_1.vcf
 #vcftools --gvcf MEVE_variants_unfiltered.g.vcf --remove-indels --maf 0.05 --max-missing 0.9 --minQ 30 --min-meanDP 10 --minDP 10 --recode --stdout > Filtered/MEVE_SNPs_filter_2.vcf
@@ -249,15 +249,32 @@ cd $OUTDIR/GATK/GenotypeGVCFs
 #vcftools --gvcf MEVE_variants_unfiltered.vcf.gz --remove-indels --max-missing 0.90 --recode --stdout > Filtered/MEVE_SNPs_filter_depth_m90.vcf
 #vcftools --gvcf MEVE_variants_unfiltered.vcf.gz --remove-indels --max-missing 0.85 --recode --stdout > Filtered/MEVE_SNPs_filter_depth_m85.vcf
 
- gatk IndexFeatureFile \
-     -I MEVE_variants_unfiltered.vcf.gz
+# gatk IndexFeatureFile \
+#     -I MEVE_variants_unfiltered.vcf.gz
 
 
-gatk VariantFiltration -V MEVE_variants_unfiltered.vcf.gz  --filter-expression "QD < 2.0" --filter-name "QD2" \
- --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
- --filter-expression "SOR > 3.0" --filter-name "SOR3" \
- --filter-expression "FS > 60.0" --filter-name "FS60" \
- --filter-expression "MQ < 40.0" --filter-name "MQ40" \
- --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
- --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
- -O Filtered/MEVE_SNPs.filtered.vcf.gz
+# gatk VariantFiltration -V MEVE_variants_unfiltered.vcf.gz  --filter-expression "QD < 2.0" --filter-name "QD2" \
+#  --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
+#  --filter-expression "SOR > 3.0" --filter-name "SOR3" \
+#  --filter-expression "FS > 60.0" --filter-name "FS60" \
+#  --filter-expression "MQ < 40.0" --filter-name "MQ40" \
+#  --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
+#  --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
+#  -O Filtered/MEVE_SNPs.filtered.vcf.gz
+
+ #SelectVariants -V MEVE_SNPs.filtered.vcf.gz --select-type SNP --exclude-filtered true -O MEVE_SNPs_filt2.vcf
+ # 1,521,389 variants
+ml  VCFtools/0.1.16-GCC-11.2.0
+
+# set filters
+MAF=0.05
+MISS=0.9
+QUAL=30
+MIN_DEPTH=10
+
+cd $OUTDIR/GATK/GenotypeGVCFs/
+# perform the filtering with vcftools
+vcftools --gzvcf MEVE_variants_unfiltered.vcf.gz \
+--remove-indels --maf $MAF --max-missing $MISS --minQ $QUAL \
+--min-meanDP $MIN_DEPTH  \
+--minDP $MIN_DEPTH --recode --stdout > $OUTDIR/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_011124.vcf
