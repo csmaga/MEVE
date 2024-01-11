@@ -8,6 +8,7 @@
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
 #SBATCH --mail-user=crs12448@uga.edu
 #SBATCH --mail-type=END,FAIL
+#SBATCH --array=1-19 
 
 #Output directory for all StringTie analyses
 #OD="/scratch/crs12448/MEVE/StringTie"
@@ -17,7 +18,7 @@
 #samples=/scratch/crs12448/MEVE/Alignment/HISAT2/BAM/sample_list
 
 # # load StringTie
-module load StringTie/2.2.1-GCC-11.3.0
+#module load StringTie/2.2.1-GCC-11.3.0
 
 #
 #
@@ -32,16 +33,16 @@ module load StringTie/2.2.1-GCC-11.3.0
 # #Merge all annotation files into one file
 #stringtie --merge -i -p 8 -G /scratch/crs12448/MEVE/Genome/Amiss.annot.2022.gff -o stringtie_merged.gtf *.gtf
 
-mkdir /scratch/crs12448/MEVE/StringTie/GFFcompare
-cd /scratch/crs12448/MEVE/StringTie/GFFcompare
+#mkdir /scratch/crs12448/MEVE/StringTie/GFFcompare
+#cd /scratch/crs12448/MEVE/StringTie/GFFcompare
 #
-module load GffCompare/0.12.6-GCC-11.2.0
+#module load GffCompare/0.12.6-GCC-11.2.0
 
 # #Compare assembled annotation to the original GTF
-gffcompare /scratch/crs12448/MEVE/StringTie/assemblies/stringtie_merged.gtf -r /scratch/MEVE/Genome/Amiss.annot.2022.gff -G -M -o gtf_comp
+#gffcompare /scratch/crs12448/MEVE/StringTie/assemblies/stringtie_merged.gtf -r /scratch/MEVE/Genome/Amiss.annot.2022.gff -G -M -o gtf_comp
 # ## M option indicates gffcompare should ignore single-exon transfags and reference transcripts
 #
-module load gffread/0.12.7-GCCcore-11.3.0
+#module load gffread/0.12.7-GCCcore-11.3.0
 
 
 #mkdir /scratch/crs12448/MEVE/StringTie/sequences
@@ -53,21 +54,28 @@ module load gffread/0.12.7-GCCcore-11.3.0
 module load BLAST+/2.13.0-gompi-2022a
 # Originally did this with BLAST module, but the makeblastdb funciton is not there. Trying with BLAST+ which I think is just a newer BLAST.
 
-cd /scratch/crs12448/MEVE/StringTie/BLAST
+#cd /scratch/crs12448/MEVE/StringTie/BLAST
 
 ## code below downloads the UniprotKB Swiss-Prot database - a high quality, manually annotated and non-redundant protein sequence database
-wget "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
-gunzip uniprot_sprot.fasta.gz
+#wget "ftp://ftp.uniprot.org/pub/databases/uniprot/current_release/knowledgebase/complete/uniprot_sprot.fasta.gz"
+#gunzip uniprot_sprot.fasta.gz
 
 ## code below creates a blast database from the previously downloaded Uniprot database
-makeblastdb -in uniprot_sprot.fasta -dbtype prot -out uniprot_sprot_database
+#makeblastdb -in uniprot_sprot.fasta -dbtype prot -out uniprot_sprot_database
 
-cd /scratch/crs12448/MEVE/StringTie/sequences/seq_bins
+#cd /scratch/crs12448/MEVE/StringTie/sequences/seq_bins
 # ## Break fasta file with assembled transcripts into smaller parts (10000 sequences each)
-awk 'BEGIN {n_seq=0;} /^>/ {if(n_seq%10000==0){file=sprintf("myseq%d.fa",n_seq);} print >> file; n_seq++; next;} { print >> file; }' < /scratch/crs12448/MEVE/StringTie/sequences/transcript_seqs.fa
+#awk 'BEGIN {n_seq=0;} /^>/ {if(n_seq%10000==0){file=sprintf("myseq%d.fa",n_seq);} print >> file; n_seq++; next;} { print >> file; }' < /scratch/crs12448/MEVE/StringTie/sequences/transcript_seqs.fa
+
 
 # ## the blastx algorithm will translate the sequence in 3 reading frames in the forward direction and 3 reading frames in the reverse direction to generate the amino acid sequences for the search
-# blastx -query myseq0.fa -db uniprot_sprot_database -out Merged_assembly_Blastx0 -outfmt 5 -evalue 0.0001 -num_threads 20
+
+# Doing this with arrays to speed things up. 
+sequences=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/StringTie/sequences/seqs)
+
+cd /scratch/crs12448/MEVE/StringTie/BLAST
+
+blastx -query /scratch/crs12448/MEVE/StringTie/sequences/${sequences} -db uniprot_sprot_database -out blasted_${sample} -outfmt 5 -evalue 0.0001 -num_threads 10
 # blastx -query myseq10000.fa -db uniprot_sprot_database -out Merged_assembly_Blastx10000 -outfmt 5 -evalue 0.0001 -num_threads 20
 # blastx -query myseq20000.fa -db uniprot_sprot_database -out Merged_assembly_Blastx20000 -outfmt 5 -evalue 0.0001 -num_threads 20
 # blastx -query myseq30000.fa -db uniprot_sprot_database -out Merged_assembly_Blastx30000 -outfmt 5 -evalue 0.0001 -num_threads 20
