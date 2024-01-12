@@ -299,7 +299,7 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 cd $OUTDIR/GATK/Recalibration
 
 gatk BaseRecalibrator \
-    -I $OUTDIR/GATK/SplitNCigarReads/${sample}_cigar.bam \
+    -I $OUTDIR/GATK/BamFix/${sample}_cigar_fix.bam \
     -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
     --known-sites $OUTDIR/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_011124.vcf \
     -O $OUTDIR/GATK/Recalibration/recal_data.table
