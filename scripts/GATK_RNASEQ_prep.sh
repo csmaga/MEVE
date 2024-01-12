@@ -20,8 +20,8 @@ OUTDIR="/scratch/crs12448/MEVE"
 
 # First, mark duplicate reads from the bam files.
 
-#ml Java/17.0.6
-#ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
+ml Java/17.0.6
+ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 
 # Run MarkDuplicates to mark duplicate reads from RNAseq data. For each file in the DD, perform the mark duplicates function. Calling on JAVA with 64GB and 8 cores
 
