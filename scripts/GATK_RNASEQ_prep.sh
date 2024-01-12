@@ -1,16 +1,17 @@
 #!/bin/bash
 #SBATCH --job-name=MEVE_GATK
-#SBATCH --partition=batch
+#SBATCH --partition=highmem_p
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem=24G
+#SBATCH --mem=300G
 #SBATCH --time=72:00:00
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
 #SBATCH --mail-user=crs12448@uga.edu
 #SBATCH --mail-type=END,FAIL
+#SBATCH --array=1-50
 
 
-#sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
+sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
 
 ## make project directory + make directory for ref genome
 OUTDIR="/scratch/crs12448/MEVE"
@@ -264,17 +265,51 @@ OUTDIR="/scratch/crs12448/MEVE"
 
  #SelectVariants -V MEVE_SNPs.filtered.vcf.gz --select-type SNP --exclude-filtered true -O MEVE_SNPs_filt2.vcf
  # 1,521,389 variants
-ml  VCFtools/0.1.16-GCC-11.2.0
 
-# set filters
-MAF=0.05
-MISS=0.9
-QUAL=30
-MIN_DEPTH=10
 
-cd $OUTDIR/GATK/GenotypeGVCFs/
-# perform the filtering with vcftools
-vcftools --gzvcf MEVE_variants_unfiltered.vcf.gz \
---remove-indels --maf $MAF --max-missing $MISS --minQ $QUAL \
---min-meanDP $MIN_DEPTH  \
---minDP $MIN_DEPTH --recode --stdout > $OUTDIR/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_011124.vcf
+#####
+####
+
+                                # Used the below filtering approach. The GATK VariantFiltration is hard for me to grasp and doesn't filter the
+                                # way I want, so going this route. 
+
+#####
+
+#####
+
+# ml  VCFtools/0.1.16-GCC-11.2.0
+
+# # set filters
+# MAF=0.05
+# MISS=0.9
+# QUAL=30
+# MIN_DEPTH=10
+
+# cd $OUTDIR/GATK/GenotypeGVCFs/
+# # perform the filtering with vcftools
+# vcftools --gzvcf MEVE_variants_unfiltered.vcf.gz \
+# --remove-indels --maf $MAF --max-missing $MISS --minQ $QUAL \
+# --min-meanDP $MIN_DEPTH  \
+# --minDP $MIN_DEPTH --recode --stdout > $OUTDIR/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_011124.vcf
+
+## This filtering approach gives me 37,434 SNPs
+
+# Trying basequality recalibration to see if it makes any difference
+
+cd $OUTDIR/GATK/Recalibration
+
+gatk BaseRecalibrator \
+    -I $OUTDIR/GATK/SplitNCigarReads/${sample}_cigar.bam \
+    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+    --known-sites $OUTDIR/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_011124.vcf \
+    -O $OUTDIR/GATK/Recalibration/recal_data.table
+
+ #gatk ApplyBQSR \
+ #   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+ #   -I $OUTDIR/GATK/SplitNCigarReads/${sample}_cigar.bam \
+ #   --$OUTDIR/GATK/Recalibration/recal_data.table \
+ #   -O $OUTDIR/GATK/Recalibration/${sample}_recal.bam
+ 
+gatk AnalyzeCovariates \
+   -bqsr $OUTDIR/GATK/Recalibration/recal_data.table \
+   -plots AnalyzeCovariates.pdf
