@@ -98,8 +98,7 @@
 # blastx -query myseq180000.fa -db uniprot_sprot_database -out Merged_assembly_Blastx180000 -outfmt 5 -evalue 0.0001 -num_threads 12
 
 ## put all blastx output files together
-#cat Merged_assembly_Blastx0 Merged_assembly_Blastx10000 Merged_assembly_Blastx20000 Merged_assembly_Blastx30000 Merged_assembly_Blastx40000 Merged_assembly_Blastx50000 Merged_assembly_Blastx60000 Merged_assembly_Blastx70000 Merged_assembly_Blastx80000 Merged_assembly_Blastx90000 Merged_assembly_Blastx100000 Merged_assembly_Blastx110000 Merged_assembly_Blastx120000 Merged_assembly_Blastx130000 Merged_assembly_Blastx140000 > /scratch/crs12448/work/PREE2/StringTie/BLAST/Merged_assembly_Blastx
-#cat *.fa > /scratch/crs12448/MEVE/StringTie/BLAST/Merged_assembly_Blastx
+
 #
 #
 #
@@ -107,17 +106,20 @@
 #
 cd /scratch/crs12448/MEVE/StringTie/BLAST
 # #
-module load Python/3.8.2-GCCcore-8.3.0
-module load SciPy-bundle/2021.05-foss-2019b-Python-3.8.2
-module load matplotlib/3.4.1-foss-2019b-Python-3.8.2
-module load Biopython/1.78-foss-2019b-Python-3.8.2
+#module load Python/3.8.2-GCCcore-8.3.0
+#module load SciPy-bundle/2021.05-foss-2019b-Python-3.8.2
+#module load matplotlib/3.4.1-foss-2019b-Python-3.8.2
+#module load Biopython/1.78-foss-2019b-Python-3.8.2
 # # # #
 # # #
 #python blastxml_to_tabular.py Merged_assembly_Blastx > Merged_assembly_Blastx.tsv
 
 # Doing this with arrays to speed things up. 
-sequences_blasted=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/StringTie/BLAST/blasted_seqs)
-python blastxml_to_tabular.py /scratch/crs12448/MEVE/StringTie/BLAST/${sequences_blasted} > /scratch/crs12448/MEVE/StringTie/BLAST/blast_tsv/${sequences_blasted/.fa/.tsv}
+#sequences_blasted=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/StringTie/BLAST/blasted_seqs)
+#python blastxml_to_tabular.py /scratch/crs12448/MEVE/StringTie/BLAST/${sequences_blasted} > /scratch/crs12448/MEVE/StringTie/BLAST/blast_tsv/${sequences_blasted/.fa/.tsv}
+
+# Merge all /tsv files together
+cat /scratch/crs12448/MEVE/StringTie/BLAST/blast_tsv/*.tsv > /scratch/crs12448/MEVE/StringTie/BLAST/blast_tsv/Merged_assembly_Blastx.tsv
 
 #cat Merged_assembly_Blastx0.tsv Merged_assembly_Blastx10000.tsv Merged_assembly_Blastx20000.tsv Merged_assembly_Blastx30000.tsv Merged_assembly_Blastx40000.tsv Merged_assembly_Blastx50000.tsv Merged_assembly_Blastx60000.tsv Merged_assembly_Blastx70000.tsv Merged_assembly_Blastx80000.tsv Merged_assembly_Blastx90000.tsv Merged_assembly_Blastx100000.tsv Merged_assembly_Blastx110000.tsv Merged_assembly_Blastx120000.tsv Merged_assembly_Blastx130000.tsv Merged_assembly_Blastx140000.tsv Merged_assembly_Blastx150000.tsv Merged_assembly_Blastx160000.tsv Merged_assembly_Blastx170000.tsv Merged_assembly_Blastx180000.tsv > Merged_assembly_Blastx.tsv
 
@@ -160,23 +162,25 @@ python blastxml_to_tabular.py /scratch/crs12448/MEVE/StringTie/BLAST/${sequences
 # # # ---Actual approach--- #
 # # ## first, may need to create new file which only includes the best hits of Merged_assembly_Blastx.tsv for each unique value in first column
 # # # code below will do this but if a unique value in column 1 has multiple rows with the minimum value in the 11th column (e-value), the final file includes all rows with this minimum value (i.e., the transcript does not have a single best hit)
-# # #
-# awk '
-#      NR == FNR {
-#          if (!($1 in min) || $11 < min[$1])
-#              min[$1] = $11
-#          next
-#      }
-#      $11 == min[$1]
-#  ' Merged_assembly_Blastx.tsv Merged_assembly_Blastx.tsv > Blastx_tophits.tsv
-#
-# head -n 20 Blastx_tophits.tsv
+
+
+cd /scratch/crs12448/MEVE/StringTie/BLAST/BLAST_results
+awk '
+     NR == FNR {
+         if (!($1 in min) || $11 < min[$1])
+             min[$1] = $11
+         next
+     }
+     $11 == min[$1]
+ ' /scratch/crs12448/MEVE/StringTie/BLAST/blast_tsv/Merged_assembly_Blastx.tsv /scratch/crs12448/MEVE/StringTie/BLAST/blast_tsv/Merged_assembly_Blastx.tsv > Blastx_tophits.tsv
+
+head -n 20 Blastx_tophits.tsv
 # # #
 # # # # grab all the deflines from the file containing the transcript fasta sequences
 # # # # the first value in the defline corresponds to the Blastx output, and the following values (separated by spaces) have information about the corresponding LOC gene
-# # # # the new file with the 'index' for each transcript is called transcript_attr_index.txt
-# grep '>' /scratch/crs12448/work/PREE2/StringTie/GFFcompare/transcript_seqs.fa > transcript_seqs_index.txt
-# head -n 20 transcript_seqs_index.txt
+# # # # the new file with the 'index' for each transcript is called transcript_seqs_index.txt
+grep '>' /scratch/crs12448/MEVE/StringTie/sequences/transcript_seqs.fa > transcript_seqs_index.txt
+head -n 20 transcript_seqs_index.txt
 # # # #
 # # # # # grab those lines of the index file that have gene_name in them - these are the ones we'll need for the LOC genes
 # grep gene_name transcript_seqs_index.txt > transcript_seqs_genename.txt
