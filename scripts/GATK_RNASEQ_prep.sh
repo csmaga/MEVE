@@ -314,8 +314,20 @@ cd $OUTDIR/GATK/Recalibration
 #   -bqsr $OUTDIR/GATK/Recalibration/S266_recal_data.table \
  #  -plots S266_AnalyzeCovariates.pdf
 
-gatk --java-options "-Xmx4g" HaplotypeCaller  \
-  -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-  -I $OUTDIR/GATK/Recalibration/${sample}_recal.bam \
-  -O $OUTDIR/GATK/HaplotypeCaller2/${sample}.g.vcf.gz \
-  -ERC GVCF
+  
+  
+
+## Apparently, the read groups need to be added to the new BAM files after correctig them (cannot use HaplotypeCaller on the recal BAM files as is). 
+# So, need to re-run AddOrReplaceReadGroups
+
+gatk --java-options "-Xmx4g" AddOrReplaceReadGroups \
+        I=$OUTDIR/GATK/Recalibration/${sample}_recal.bam \
+        O=$OUTDIR/GATK/BamFix2/${sample}_cigar_fix.bam \
+        SORT_ORDER=coordinate  RGLB=seq  RGPU=1 RGPL=illumina  RGSM=${sample}.bam  \
+        CREATE_INDEX=True
+
+# gatk --java-options "-Xmx4g" HaplotypeCaller  \
+#   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#   -I $OUTDIR/GATK/Recalibration/${sample}_recal.bam \
+#   -O $OUTDIR/GATK/HaplotypeCaller2/${sample}.g.vcf.gz \
+#   -ERC GVCF
