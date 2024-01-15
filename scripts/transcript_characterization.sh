@@ -51,7 +51,7 @@
 #gffread -F -w transcript_seqs.fa -g /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta /scratch/crs12448/MEVE/StringTie/assemblies/stringtie_merged.gtf
 
 
-module load BLAST+/2.13.0-gompi-2022a
+#module load BLAST+/2.13.0-gompi-2022a
 # Originally did this with BLAST module, but the makeblastdb funciton is not there. Trying with BLAST+ which I think is just a newer BLAST.
 
 #cd /scratch/crs12448/MEVE/StringTie/BLAST
@@ -71,11 +71,11 @@ module load BLAST+/2.13.0-gompi-2022a
 # ## the blastx algorithm will translate the sequence in 3 reading frames in the forward direction and 3 reading frames in the reverse direction to generate the amino acid sequences for the search
 
 # Doing this with arrays to speed things up. 
-sequences=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/StringTie/sequences/seq_bins/seqs)
+#sequences=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/StringTie/sequences/seq_bins/seqs)
 
-cd /scratch/crs12448/MEVE/StringTie/BLAST
+# cd /scratch/crs12448/MEVE/StringTie/BLAST
 
-blastx -query /scratch/crs12448/MEVE/StringTie/sequences/seq_bins/${sequences} -db uniprot_sprot_database -out blasted_${sequences} -outfmt 5 -evalue 0.0001 -num_threads 10
+# blastx -query /scratch/crs12448/MEVE/StringTie/sequences/seq_bins/${sequences} -db uniprot_sprot_database -out blasted_${sequences} -outfmt 5 -evalue 0.0001 -num_threads 10
 
 ## IGNORE below codes - this was before I knew how to use arrays 
 # blastx -query myseq10000.fa -db uniprot_sprot_database -out Merged_assembly_Blastx10000 -outfmt 5 -evalue 0.0001 -num_threads 20
@@ -99,20 +99,29 @@ blastx -query /scratch/crs12448/MEVE/StringTie/sequences/seq_bins/${sequences} -
 
 ## put all blastx output files together
 #cat Merged_assembly_Blastx0 Merged_assembly_Blastx10000 Merged_assembly_Blastx20000 Merged_assembly_Blastx30000 Merged_assembly_Blastx40000 Merged_assembly_Blastx50000 Merged_assembly_Blastx60000 Merged_assembly_Blastx70000 Merged_assembly_Blastx80000 Merged_assembly_Blastx90000 Merged_assembly_Blastx100000 Merged_assembly_Blastx110000 Merged_assembly_Blastx120000 Merged_assembly_Blastx130000 Merged_assembly_Blastx140000 > /scratch/crs12448/work/PREE2/StringTie/BLAST/Merged_assembly_Blastx
+#cat *.fa > /scratch/crs12448/MEVE/StringTie/BLAST/Merged_assembly_Blastx
+#
 #
 #
 # #
 #
-#cd /scratch/crs12448/work/PREE2/StringTie/BLAST/assembly_subsets
+cd /scratch/crs12448/MEVE/StringTie/BLAST
 # #
-# module load Python/3.8.2-GCCcore-8.3.0
-# module load SciPy-bundle/2021.05-foss-2019b-Python-3.8.2
-# module load matplotlib/3.4.1-foss-2019b-Python-3.8.2
-# module load Biopython/1.78-foss-2019b-Python-3.8.2
+module load Python/3.8.2-GCCcore-8.3.0
+module load SciPy-bundle/2021.05-foss-2019b-Python-3.8.2
+module load matplotlib/3.4.1-foss-2019b-Python-3.8.2
+module load Biopython/1.78-foss-2019b-Python-3.8.2
 # # # #
 # # #
-# #python ~/PREE2/blastxml_to_tabular.py Merged_assembly_Blastx > Merged_assembly_Blastx.tsv
-#
+#python blastxml_to_tabular.py Merged_assembly_Blastx > Merged_assembly_Blastx.tsv
+
+# Doing this with arrays to speed things up. 
+sequences_blasted=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/StringTie/BLAST/blasted_seqs)
+python blastxml_to_tabular.py /scratch/crs12448/MEVE/StringTie/BLAST/${sequences_blasted} > /scratch/crs12448/MEVE/StringTie/BLAST/blast_tsv/${sequences_blasted/.fa/.tsv}
+
+#cat Merged_assembly_Blastx0.tsv Merged_assembly_Blastx10000.tsv Merged_assembly_Blastx20000.tsv Merged_assembly_Blastx30000.tsv Merged_assembly_Blastx40000.tsv Merged_assembly_Blastx50000.tsv Merged_assembly_Blastx60000.tsv Merged_assembly_Blastx70000.tsv Merged_assembly_Blastx80000.tsv Merged_assembly_Blastx90000.tsv Merged_assembly_Blastx100000.tsv Merged_assembly_Blastx110000.tsv Merged_assembly_Blastx120000.tsv Merged_assembly_Blastx130000.tsv Merged_assembly_Blastx140000.tsv Merged_assembly_Blastx150000.tsv Merged_assembly_Blastx160000.tsv Merged_assembly_Blastx170000.tsv Merged_assembly_Blastx180000.tsv > Merged_assembly_Blastx.tsv
+
+
 # #python ~/PREE2/blastxml_to_tabular.py /scratch/crs12448/work/PREE2/StringTie/BLAST/Merged_assembly_Blastx0 > Merged_assembly_Blastx0.tsv
 # #python ~/PREE2/blastxml_to_tabular.py /scratch/crs12448/work/PREE2/StringTie/BLAST/Merged_assembly_Blastx10000 > Merged_assembly_Blastx10000.tsv
 # #python ~/PREE2/blastxml_to_tabular.py /scratch/crs12448/work/PREE2/StringTie/BLAST/Merged_assembly_Blastx20000 > Merged_assembly_Blastx20000.tsv
