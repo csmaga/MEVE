@@ -298,11 +298,11 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 
 cd $OUTDIR/GATK/Recalibration
 
-gatk BaseRecalibrator \
-    -I $OUTDIR/GATK/BamFix/${sample}_cigar_fix.bam \
-    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-    --known-sites $OUTDIR/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_011124.vcf \
-    -O $OUTDIR/GATK/Recalibration/${sample}_recal_data.table
+#gatk BaseRecalibrator \
+#    -I $OUTDIR/GATK/BamFix/${sample}_cigar_fix.bam \
+#    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#    --known-sites $OUTDIR/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_011124.vcf \
+#    -O $OUTDIR/GATK/Recalibration/${sample}_recal_data.table
 
  #gatk ApplyBQSR \
  #   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
@@ -311,5 +311,11 @@ gatk BaseRecalibrator \
  #   -O $OUTDIR/GATK/Recalibration/${sample}_recal.bam
  
 #gatk AnalyzeCovariates \
-#   -bqsr $OUTDIR/GATK/Recalibration/recal_data.table \
-#   -plots AnalyzeCovariates.pdf
+#   -bqsr $OUTDIR/GATK/Recalibration/S266_recal_data.table \
+ #  -plots S266_AnalyzeCovariates.pdf
+
+gatk --java-options "-Xmx4g" HaplotypeCaller  \
+  -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+  -I $OUTDIR/GATK/Recalibration/${sample}_recal.bam \
+  -O $OUTDIR/GATK/HaplotypeCaller2/${sample}.g.vcf.gz \
+  -ERC GVCF
