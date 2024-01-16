@@ -8,7 +8,7 @@
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
 #SBATCH --mail-user=crs12448@uga.edu
 #SBATCH --mail-type=END,FAIL
-#SBATCH --array=1-50
+###SBATCH --array=1-50
 
 
 sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
@@ -326,8 +326,62 @@ cd $OUTDIR/GATK/Recalibration
 #         SORT_ORDER=coordinate  RGLB=seq  RGPU=1 RGPL=illumina  RGSM=${sample}.bam  \
 #         CREATE_INDEX=True
 
-gatk --java-options "-Xmx4g" HaplotypeCaller  \
-  -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-  -I $OUTDIR/GATK/BamFix2/${sample}_cigar_fix.bam \
-  -O $OUTDIR/GATK/HaplotypeCaller2/${sample}.g.vcf.gz \
-  -ERC GVCF
+# gatk --java-options "-Xmx4g" HaplotypeCaller  \
+#   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#   -I $OUTDIR/GATK/BamFix2/${sample}_cigar_fix.bam \
+#   -O $OUTDIR/GATK/HaplotypeCaller2/${sample}.g.vcf.gz \
+#   -ERC GVCF
+
+cd $OUTDIR/GATK/HaplotypeCaller2
+
+gatk CombineGVCFs \
+   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+ --variant S231.g.vcf.gz \
+ --variant S242.g.vcf.gz \
+ --variant S246.g.vcf.gz \
+ --variant S247.g.vcf.gz \
+ --variant S252.g.vcf.gz \
+ --variant S256_2.g.vcf.gz \
+ --variant S263.g.vcf.gz \
+ --variant S266_2.g.vcf.gz \
+ --variant S280.g.vcf.gz \
+ --variant S295.g.vcf.gz \
+ --variant S302.g.vcf.gz \
+ --variant S303.g.vcf.gz \
+ --variant S314.g.vcf.gz \
+ --variant S316.g.vcf.gz \
+ --variant S317.g.vcf.gz \
+ --variant S319.g.vcf.gz \
+ --variant S328.g.vcf.gz \
+ --variant S336.g.vcf.gz \
+ --variant S337.g.vcf.gz \
+ --variant S338.g.vcf.gz \
+ --variant S344.g.vcf.gz \
+ --variant S345.g.vcf.gz \
+ --variant S348.g.vcf.gz \
+ --variant S350.g.vcf.gz \
+ --variant S353.g.vcf.gz \
+ --variant S357.g.vcf.gz \
+ --variant S359.g.vcf.gz \
+ --variant S367.g.vcf.gz \
+ --variant S376.g.vcf.gz \
+ --variant S380.g.vcf.gz \
+ --variant S384.g.vcf.gz \
+ --variant S388.g.vcf.gz \
+ --variant S391.g.vcf.gz \
+ --variant S392.g.vcf.gz \
+ --variant S393.g.vcf.gz \
+ --variant S406.g.vcf.gz \
+ --variant S407.g.vcf.gz \
+ --variant S408.g.vcf.gz \
+ --variant S416.g.vcf.gz \
+ --variant S420.g.vcf.gz \
+ --variant S421.g.vcf.gz \
+ --variant S422.g.vcf.gz \
+ --variant S425.g.vcf.gz \
+ --variant S426.g.vcf.gz \
+ --variant S427.g.vcf.gz \
+ --variant S432.g.vcf.gz \
+ --variant S433.g.vcf.gz \
+ --variant S435.g.vcf.gz \
+ -O $OUTDIR/GATK/CombineGVCFs2/all_samples_unfiltered.g.vcf.gz
