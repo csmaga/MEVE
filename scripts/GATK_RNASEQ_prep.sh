@@ -392,3 +392,6 @@ cd $OUTDIR/GATK/GenotypeGVCFs2
    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
    -V $OUTDIR/GATK/CombineGVCFs2/all_samples_unfiltered.g.vcf.gz \
    -O MEVE_variants_unfiltered.vcf
+
+# # perform the filtering with vcftools
+#vcftools --gzvcf M_unfiltered.vcf.gz  --remove-indels --maf $MAF --max-missing $MISS --minQ $QUAL --min-meanDP $MIN_DEPTH  --minDP $MIN_DEPTH --recode --stdout > $OUTDIR/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_011124.vcf
