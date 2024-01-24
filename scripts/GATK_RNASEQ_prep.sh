@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=MEVE_GATK
-#SBATCH --partition=highmem_p
+#SBATCH --partition=bash
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=300G
