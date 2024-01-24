@@ -11,7 +11,7 @@
 ###SBATCH --array=1-50
 
 
-sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
+#sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/Data/Raw/sample_names)
 
 ## make project directory + make directory for ref genome
 OUTDIR="/scratch/crs12448/MEVE"
@@ -277,7 +277,11 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 
 #####
 
-# ml  VCFtools/0.1.16-GCC-11.2.0
+ml  VCFtools/0.1.16-GCC-11.2.0
+cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
+
+# This filtering further requires that sites are SNPs only, marks genotypes as missing if any individual genotype has a depth of less than 10, and requires that sites being present in at least 90% of inviduals. 
+vcftools --gzvcf MEVE_variants_unfiltered.vcf.gz --remove-indels --minDP 10 --maf 0.05  --max-missing 0.90 --recode --stdout > /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_012424.vcf
 
 # # set filters
 # MAF=0.05
@@ -294,9 +298,23 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 
 ## This filtering approach gives me 37,434 SNPs
 
-# Trying basequality recalibration to see if it makes any difference
 
-cd $OUTDIR/GATK/Recalibration
+
+
+
+
+
+
+
+
+
+
+
+
+
+# Trying basequality recalibration to see if it makes any difference
+#
+#cd $OUTDIR/GATK/Recalibration
 
 #gatk BaseRecalibrator \
 #    -I $OUTDIR/GATK/BamFix/${sample}_cigar_fix.bam \
@@ -314,8 +332,6 @@ cd $OUTDIR/GATK/Recalibration
 #   -bqsr $OUTDIR/GATK/Recalibration/S266_recal_data.table \
  #  -plots S266_AnalyzeCovariates.pdf
 
-  
-  
 
 ## Apparently, the read groups need to be added to the new BAM files after correctig them (cannot use HaplotypeCaller on the recal BAM files as is). 
 # So, need to re-run AddOrReplaceReadGroups
@@ -386,12 +402,17 @@ cd $OUTDIR/GATK/Recalibration
 #  --variant S435.g.vcf.gz \
 #  -O $OUTDIR/GATK/CombineGVCFs2/all_samples_unfiltered.g.vcf.gz
 
-cd $OUTDIR/GATK/GenotypeGVCFs2
+#cd $OUTDIR/GATK/GenotypeGVCFs2
 
-  gatk GenotypeGVCFs \
-   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-   -V $OUTDIR/GATK/CombineGVCFs2/all_samples_unfiltered.g.vcf.gz \
-   -O MEVE_variants_unfiltered.vcf
+  # gatk GenotypeGVCFs \
+  #  -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+  #  -V $OUTDIR/GATK/CombineGVCFs2/all_samples_unfiltered.g.vcf.gz \
+  #  -O MEVE_variants_unfiltered.vcf
 
 # # perform the filtering with vcftools
 #vcftools --gzvcf M_unfiltered.vcf.gz  --remove-indels --maf $MAF --max-missing $MISS --minQ $QUAL --min-meanDP $MIN_DEPTH  --minDP $MIN_DEPTH --recode --stdout > $OUTDIR/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_011124.vcf
+# # set filters
+# MAF=0.05
+# MISS=0.9
+# QUAL=30
+# MIN_DEPTH=10
