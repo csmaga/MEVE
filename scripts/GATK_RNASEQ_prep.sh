@@ -278,10 +278,10 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 #####
 
 ml  VCFtools/0.1.16-GCC-11.2.0
-cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
+cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered
 
 # This filtering further requires that sites are SNPs only, marks genotypes as missing if any individual genotype has a depth of less than 10, and requires that sites being present in at least 90% of inviduals. 
-vcftools --gzvcf MEVE_variants_unfiltered.vcf.gz --remove-indels --minDP 10 --maf 0.05  --max-missing 0.90 --recode --stdout > /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_012424.vcf
+vcftools --gzvcf MEVE_SNPs.filtered.vcf.gz --remove-indels --minDP 10 --maf 0.05  --max-missing 0.90 --recode --stdout > /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_013024.vcf
 
 # # set filters
 # MAF=0.05
