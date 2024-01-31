@@ -1,6 +1,6 @@
 #!/bin/bash
 #SBATCH --job-name=MEVE_GATK
-#SBATCH --partition=batch
+#SBATCH --partition=highmem_p
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=300G
@@ -214,12 +214,13 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 #  --variant S435.g.vcf.gz \
 #  -O $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz
  # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
-#cd $OUTDIR/GATK/GenotypeGVCFs
+cd $OUTDIR/GATK/GenotypeGVCFs
 
-#  gatk GenotypeGVCFs \
-#    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-#    -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
-#    -O MEVE_variants_unfiltered.vcf
+  gatk GenotypeGVCFs \
+    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+    -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
+    -all-sites \
+    -O MEVE_variants_unfiltered_allsites.vcf
 
 # Filter SNPs
 
@@ -263,25 +264,20 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 #  --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
 #  -O Filtered/MEVE_SNPs.filtered.vcf.gz
 
- #SelectVariants -V MEVE_SNPs.filtered.vcf.gz --select-type SNP --exclude-filtered true -O MEVE_SNPs_filt2.vcf
- # 1,521,389 variants
 
-
-#####
-####
-
-                                # Used the below filtering approach. The GATK VariantFiltration is hard for me to grasp and doesn't filter the
-                                # way I want, so going this route. 
-
-#####
-
-#####
-
-ml  VCFtools/0.1.16-GCC-11.2.0
-cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered
+#ml  VCFtools/0.1.16-GCC-11.2.0
+#cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered
 
 # This filtering further requires that sites are SNPs only, marks genotypes as missing if any individual genotype has a depth of less than 10, and requires that sites being present in at least 90% of inviduals. 
-vcftools --gzvcf MEVE_SNPs.filtered.vcf.gz --remove-indels --minDP 10 --maf 0.05  --max-missing 0.90 --recode --stdout > /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_013024.vcf
+#vcftools --gzvcf MEVE_SNPs.filtered.vcf.gz --remove-indels --minDP 10 --maf 0.05  --max-missing 0.90 --recode --stdout > /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_013024.vcf
+
+# This gives me 37,434 SNPs. I think this is best approach to take because it filteres for recommended strand biases
+# and quality by depth instead of just quality as recommended by GATK Best Practiices for Hard Filtering Variants. I imagine thes
+# are the same SNPs as the previous analysis, just slightly fewer in number. 
+
+#vcftools --gzvcf MEVE_SNPs.filtered.vcf.gz --remove-indels --minDP 10 --maf 0.05  --max-missing 0.90 --recode --stdout > /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_013024.vcf
+
+
 
 # # set filters
 # MAF=0.05
