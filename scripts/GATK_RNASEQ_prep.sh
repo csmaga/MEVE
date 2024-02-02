@@ -216,11 +216,11 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
  # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
 cd $OUTDIR/GATK/GenotypeGVCFs
 
-  #gatk GenotypeGVCFs \
-  #  -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-  #  -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
-  #  -all-sites \
-  #  -O MEVE_variants_unfiltered_allsites.vcf
+  gatk GenotypeGVCFs --java-options "-Xmx32g"\
+   -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+   -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
+   -all-sites \
+   -O MEVE_variants_unfiltered_allsites_2.vcf
 
 # Filter SNPs
 
@@ -275,14 +275,14 @@ cd $OUTDIR/GATK/GenotypeGVCFs
 # and quality by depth instead of just quality as recommended by GATK Best Practiices for Hard Filtering Variants. I imagine thes
 # are the same SNPs as the previous analysis, just slightly fewer in number. 
 
-gatk VariantFiltration -V MEVE_variants_unfiltered_allsites.vcf  --filter-expression "QD < 2.0" --filter-name "QD2" \
- --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
- --filter-expression "SOR > 3.0" --filter-name "SOR3" \
- --filter-expression "FS > 60.0" --filter-name "FS60" \
- --filter-expression "MQ < 40.0" --filter-name "MQ40" \
- --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
- --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
- -O Filtered/MEVE_variants_filtered_allsites.vcf.gz
+# gatk VariantFiltration -V MEVE_variants_unfiltered_allsites.vcf  --filter-expression "QD < 2.0" --filter-name "QD2" \
+#  --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
+#  --filter-expression "SOR > 3.0" --filter-name "SOR3" \
+#  --filter-expression "FS > 60.0" --filter-name "FS60" \
+#  --filter-expression "MQ < 40.0" --filter-name "MQ40" \
+#  --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
+#  --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
+#  -O Filtered/MEVE_variants_filtered_allsites.vcf.gz
 
 
 
