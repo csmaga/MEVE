@@ -219,8 +219,9 @@ cd $OUTDIR/GATK/GenotypeGVCFs
   gatk GenotypeGVCFs --java-options "-Xmx32g"\
    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
    -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
+   -L $OUTDIR/PopGene/gene_coord_1based.bed -ip 100 \
    -all-sites \
-   -O MEVE_variants_unfiltered_allsites_2.vcf
+   -O MEVE_variants_unfiltered_allgenes.vcf
 
 # Filter SNPs
 
