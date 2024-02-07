@@ -212,8 +212,8 @@ cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
      -V Filtered/MEVE_variants_filtered_allgenes.vcf.gz \
      --select-type-to-include SNP \
-     --select "QUAL < 30.0" \
-     --select "QD < 2.0" \
+     --select "QUAL > 30.0" \
+     --select "QD > 2.0" \
      -O Filtered/MEVE_variants_filtered_allgenes_PASS2.vcf
 
 
