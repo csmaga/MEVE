@@ -214,6 +214,7 @@ cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
      --select-type-to-include SNP \
      --select "QUAL > 30.0" \
      --select "QD > 2.0" \
+     --exclude-non-variants FALSE \
      -O Filtered/MEVE_variants_filtered_allgenes_PASS2.vcf
 
 
