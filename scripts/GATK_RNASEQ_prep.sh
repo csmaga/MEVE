@@ -201,12 +201,20 @@ cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
 #   --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
 #   -O Filtered/MEVE_variants_filtered_allgenes.vcf.gz
 
+#  gatk SelectVariants \
+#      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
+#      -V Filtered/MEVE_variants_filtered_allgenes.vcf.gz \
+#      --select-type-to-include SNP \
+#      --exclude-filtered TRUE \
+#      -O Filtered/MEVE_variants_filtered_allgenes_PASS.vcf
+
  gatk SelectVariants \
      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
      -V Filtered/MEVE_variants_filtered_allgenes.vcf.gz \
      --select-type-to-include SNP \
-     --exclude-filtered TRUE \
-     -O Filtered/MEVE_variants_filtered_allgenes_PASS.vcf
+     --select "QUAL < 30.0" \
+     --select "QD < 2.0" \
+     -O Filtered/MEVE_variants_filtered_allgenes_PASS2.vcf
 
 
 
