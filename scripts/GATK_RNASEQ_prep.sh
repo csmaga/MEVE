@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=300G
-#SBATCH --time=24:00:00
+#SBATCH --time=48:00:00
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
 #SBATCH --mail-user=crs12448@uga.edu
 #SBATCH --mail-type=END,FAIL
@@ -150,14 +150,14 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 #  --variant S435.g.vcf.gz \
 #  -O $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz
  # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
-# cd $OUTDIR/GATK/GenotypeGVCFs
+cd $OUTDIR/GATK/GenotypeGVCFs
 
-#   gatk GenotypeGVCFs --java-options "-Xmx32g"\
-#    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-#    -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
-#    -L $OUTDIR/PopGen/gene_bed_sorted.bed -ip 100 \
-#    -all-sites \
-#    -O MEVE_variants_unfiltered_allgenes.vcf
+gatk GenotypeGVCFs --java-options "-Xmx120g" \
+    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+    -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
+    -L $OUTDIR/PopGen/gene_bed_sorted.bed \
+    -all-sites \
+    -O MEVE_variants_unfiltered_allgenes_02_27.vcf.gz
 
 # Filter SNPs
 
@@ -174,7 +174,7 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 #  -O Filtered/MEVE_SNPs.filtered.vcf.gz
 
 #ml  VCFtools/0.1.16-GCC-11.2.0
-cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
+#cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
 
 # This filtering further requires that sites are SNPs only, marks genotypes as missing if any individual genotype has a depth of less than 10, and requires that sites being present in at least 90% of inviduals. 
 #vcftools --gzvcf MEVE_SNPs.filtered.vcf.gz --remove-indels --minDP 10 --maf 0.05  --max-missing 0.90 --recode --stdout > /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_013024.vcf
@@ -193,29 +193,28 @@ cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
 # with QD > 2 PASS to use for downstream analyses
 
 # gatk VariantFiltration -V MEVE_variants_unfiltered_allgenes.vcf  --filter-expression "QD < 2.0" --filter-name "QD2" \
-#   --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
-#   --filter-expression "SOR > 3.0" --filter-name "SOR3" \
-#   --filter-expression "FS > 60.0" --filter-name "FS60" \
-#   --filter-expression "MQ < 40.0" --filter-name "MQ40" \
-#   --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
-#   --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
-#   -O Filtered/MEVE_variants_filtered_allgenes.vcf.gz
+#    --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
+#    --filter-expression "SOR > 3.0" --filter-name "SOR3" \
+#    --filter-expression "FS > 60.0" --filter-name "FS60" \
+#    --filter-expression "MQ < 40.0" --filter-name "MQ40" \
+#    --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
+#    --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
+#    -O Filtered/MEVE_variants_filtered_allgenes.vcf.gz
+
+#  gatk SelectVariants \
+#      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
+#      -V Filtered/MEVE_variants_filtered_allgenes.vcf.gz \
+#      --exclude-filtered TRUE \
+#      -O Filtered/MEVE_variants_filtered_allgenes_PASS.vcf
 
 #  gatk SelectVariants \
 #      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
 #      -V Filtered/MEVE_variants_filtered_allgenes.vcf.gz \
 #      --select-type-to-include SNP \
-#      --exclude-filtered TRUE \
-#      -O Filtered/MEVE_variants_filtered_allgenes_PASS.vcf
-
- gatk SelectVariants \
-     -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
-     -V Filtered/MEVE_variants_filtered_allgenes.vcf.gz \
-     --select-type-to-include SNP \
-     --select "QUAL > 30.0" \
-     --select "QD > 2.0" \
-     --exclude-non-variants FALSE \
-     -O Filtered/MEVE_variants_filtered_allgenes_PASS2.vcf
+#      --select "QUAL > 30.0" \
+#      --select "QD > 2.0" \
+#      --exclude-non-variants FALSE \
+#      -O Filtered/MEVE_variants_filtered_allgenes_PASS2.vcf
 
 
 
@@ -346,3 +345,28 @@ cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
 # MISS=0.9
 # QUAL=30
 # MIN_DEPTH=10
+
+
+
+
+
+# gatk GenotypeGVCFs -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta -V /scratch/crs12448/MEVE/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz -L /scratch/crs12448/MEVE/PopGen/gene_bed_sorted_sub.bed -all-sites -O sub_test.vcf
+# # 
+
+# gatk VariantFiltration -V sub_test.vcf  --filter-expression "QD < 2.0" --filter-name "QD2" \
+#    --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
+#    --filter-expression "SOR > 3.0" --filter-name "SOR3" \
+#    --filter-expression "FS > 60.0" --filter-name "FS60" \
+#    --filter-expression "MQ < 40.0" --filter-name "MQ40" \
+#    --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
+#    --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
+#    -O sub_test_filtered.vcf.gz
+
+
+#  gatk SelectVariants \
+#      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
+#      -V Filtered/MEVE_variants_filtered_allgenes.vcf.gz \
+#      --exclude-non-variants FALSE \
+#      --exclude-filtered TRUE \
+#      -O sub.vcf
+
