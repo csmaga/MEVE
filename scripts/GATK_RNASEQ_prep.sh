@@ -152,26 +152,26 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
  # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
 cd $OUTDIR/GATK/GenotypeGVCFs
 
-gatk GenotypeGVCFs --java-options "-Xmx120g" \
-    -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
-    -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
-    -L $OUTDIR/PopGen/gene_bed_sorted.bed \
-    -all-sites \
-    -O MEVE_variants_unfiltered_allgenes_02_27.vcf.gz
+# gatk GenotypeGVCFs --java-options "-Xmx120g" \
+#     -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
+#     -V $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz \
+#     -L $OUTDIR/PopGen/gene_bed_sorted.bed \
+#     -all-sites \
+#     -O MEVE_variants_unfiltered_allgenes_02_27.vcf.gz
 
 # Filter SNPs
 
 # gatk IndexFeatureFile \
 #     -I MEVE_variants_unfiltered.vcf.gz
 
-# gatk VariantFiltration -V MEVE_variants_unfiltered.vcf.gz  --filter-expression "QD < 2.0" --filter-name "QD2" \
-#  --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
-#  --filter-expression "SOR > 3.0" --filter-name "SOR3" \
-#  --filter-expression "FS > 60.0" --filter-name "FS60" \
-#  --filter-expression "MQ < 40.0" --filter-name "MQ40" \
-#  --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
-#  --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
-#  -O Filtered/MEVE_SNPs.filtered.vcf.gz
+gatk VariantFiltration -V MEVE_variants_unfiltered_allgenes_02_27.vcf.gz  --filter-expression "QD < 2.0" --filter-name "QD2" \
+  --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
+  --filter-expression "SOR > 3.0" --filter-name "SOR3" \
+  --filter-expression "FS > 60.0" --filter-name "FS60" \
+  --filter-expression "MQ < 40.0" --filter-name "MQ40" \
+  --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
+  --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
+  -O Filtered/MEVE_SNPs.filtered.allgenes_02_28.vcf.gz
 
 #ml  VCFtools/0.1.16-GCC-11.2.0
 #cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
