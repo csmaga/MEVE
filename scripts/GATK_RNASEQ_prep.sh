@@ -164,14 +164,14 @@ cd $OUTDIR/GATK/GenotypeGVCFs
 # gatk IndexFeatureFile \
 #     -I MEVE_variants_unfiltered.vcf.gz
 
-gatk VariantFiltration -V MEVE_variants_unfiltered_allgenes_02_27.vcf.gz  --filter-expression "QD < 2.0" --filter-name "QD2" \
-  --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
-  --filter-expression "SOR > 3.0" --filter-name "SOR3" \
-  --filter-expression "FS > 60.0" --filter-name "FS60" \
-  --filter-expression "MQ < 40.0" --filter-name "MQ40" \
-  --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
-  --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
-  -O Filtered/MEVE_SNPs.filtered.allgenes_02_28.vcf.gz
+# gatk VariantFiltration -V MEVE_variants_unfiltered_allgenes_02_27.vcf.gz  --filter-expression "QD < 2.0" --filter-name "QD2" \
+#   --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
+#   --filter-expression "SOR > 3.0" --filter-name "SOR3" \
+#   --filter-expression "FS > 60.0" --filter-name "FS60" \
+#   --filter-expression "MQ < 40.0" --filter-name "MQ40" \
+#   --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
+#   --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
+#   -O Filtered/MEVE_SNPs.filtered.allgenes_02_28.vcf.gz
 
 #ml  VCFtools/0.1.16-GCC-11.2.0
 #cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs
@@ -201,11 +201,12 @@ gatk VariantFiltration -V MEVE_variants_unfiltered_allgenes_02_27.vcf.gz  --filt
 #    --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
 #    -O Filtered/MEVE_variants_filtered_allgenes.vcf.gz
 
-#  gatk SelectVariants \
-#      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
-#      -V Filtered/MEVE_variants_filtered_allgenes.vcf.gz \
-#      --exclude-filtered TRUE \
-#      -O Filtered/MEVE_variants_filtered_allgenes_PASS.vcf
+gatk SelectVariants \
+      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
+      -V Filtered/MEVE_SNPs.filtered.allgenes_02_28.vcf.gz \
+      --exclude-filtered TRUE \
+      --select-type-to-exclude INDEL \
+      -O Filtered/MEVE_variants_filtered_allgenes_PASS_02_29.vcf
 
 #  gatk SelectVariants \
 #      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
