@@ -206,6 +206,7 @@ gatk SelectVariants \
       -V Filtered/MEVE_SNPs.filtered.allgenes_02_28.vcf.gz \
       --exclude-filtered TRUE \
       --select-type-to-exclude INDEL \
+      --restrict-alleles-to BIALLELIC \
       -O Filtered/MEVE_variants_filtered_allgenes_PASS_02_29.vcf
 
 #  gatk SelectVariants \
