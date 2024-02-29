@@ -205,8 +205,8 @@ gatk SelectVariants \
       -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
       -V Filtered/MEVE_SNPs.filtered.allgenes_02_28.vcf.gz \
       --exclude-filtered TRUE \
-      --select-type-to-exclude INDEL \
-      --restrict-alleles-to BIALLELIC \
+      --select-type-to-include NO_VARIATION \
+      --select-type-to-include SNP \
       -O Filtered/MEVE_variants_filtered_allgenes_PASS_02_29.vcf
 
 #  gatk SelectVariants \
