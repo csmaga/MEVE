@@ -150,7 +150,7 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 #  --variant S435.g.vcf.gz \
 #  -O $OUTDIR/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz
  # Now we have a single VCF with all samples. We need to genotype them all together now, which can be done using GenotypeGVCFs as below
-cd $OUTDIR/GATK/GenotypeGVCFs
+#cd $OUTDIR/GATK/GenotypeGVCFs
 
 # gatk GenotypeGVCFs --java-options "-Xmx120g" \
 #     -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta \
@@ -178,6 +178,7 @@ cd $OUTDIR/GATK/GenotypeGVCFs
 
 # This filtering further requires that sites are SNPs only, marks genotypes as missing if any individual genotype has a depth of less than 10, and requires that sites being present in at least 90% of inviduals. 
 #vcftools --gzvcf MEVE_SNPs.filtered.vcf.gz --remove-indels --minDP 10 --maf 0.05  --max-missing 0.90 --recode --stdout > /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_013024.vcf
+#vcftools --vcf MEVE_variants_filtered_allgenes_PASS_02_29.vcf --minDP 10 --maf 0.05  --max-missing 0.90 --recode --stdout > /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_variants_filtered_PASS_filt2_02_29.vcf
 
 # This gives me 37,434 SNPs. I think this is best approach to take because it filteres for recommended strand biases
 # and quality by depth instead of just quality as recommended by GATK Best Practiices for Hard Filtering Variants. I imagine thes
@@ -201,13 +202,13 @@ cd $OUTDIR/GATK/GenotypeGVCFs
 #    --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
 #    -O Filtered/MEVE_variants_filtered_allgenes.vcf.gz
 
-gatk SelectVariants \
-      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
-      -V Filtered/MEVE_SNPs.filtered.allgenes_02_28.vcf.gz \
-      --exclude-filtered TRUE \
-      --select-type-to-include NO_VARIATION \
-      --select-type-to-include SNP \
-      -O Filtered/MEVE_variants_filtered_allgenes_PASS_02_29.vcf
+# gatk SelectVariants \
+#       -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
+#       -V Filtered/MEVE_SNPs.filtered.allgenes_02_28.vcf.gz \
+#       --exclude-filtered TRUE \
+#       --select-type-to-include NO_VARIATION \
+#       --select-type-to-include SNP \
+#       -O Filtered/MEVE_variants_filtered_allgenes_PASS_02_29.vcf
 
 #  gatk SelectVariants \
 #      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
@@ -371,4 +372,26 @@ gatk SelectVariants \
 #      --exclude-non-variants FALSE \
 #      --exclude-filtered TRUE \
 #      -O sub.vcf
+
+# vcftools --vcf MEVE_variants_filtered_allgenes_PASS_02_29.vcf \
+# --max-maf 0 \
+# --max-missing 0.90 \
+# --minDP 10  \
+# --recode --stdout > MEVE_invariant.vcf
+
+# vcftools --vcf MEVE_variants_filtered_allgenes_PASS_02_29.vcf \
+# --mac 1 \
+# --maf 0.05 \
+# --max-missing 0.90 \
+# --minDP 10  \
+# --recode --stdout > MEVE_invariant.vcf
+cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered
+ml BCFtools
+bcftools view -H MEVE_SNPs.filtered.allgenes_02_28.vcf.gz | wc -l > num_snps
+bcftools view -H MEVE_SNPs.filtered.vcf.gz | wc -l > num_snps2
+bcftools view -H MEVE_variants_filtered_allgenes.vcf.gz | wc -l > num_snps3
+bcftools view -H MEVE_variants_filtered_allsites.vcf.gz| wc -l > num_snps4
+
+
+
 
