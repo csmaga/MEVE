@@ -16,4 +16,5 @@ pixy --stats pi fst dxy \
 --vcf /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_sites_pixy.vcf.gz \
 --populations /scratch/crs12448/MEVE/PopGen/MEVE_pops.txt \
 --n_cores 4 \
---bed_file /scratch/crs12448/MEVE/PopGen/gene_bed_sorted.bed
+--bed_file /scratch/crs12448/MEVE/PopGen/gene_bed_sorted.bed \
+--output_folder /scratch/crs12448/MEVE/PopGen
