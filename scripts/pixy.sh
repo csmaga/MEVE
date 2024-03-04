@@ -10,6 +10,7 @@
 #SBATCH --mail-type=END,FAIL
 
 ml  Miniconda3/23.5.2-0
+conda init bash
 conda activate /home/crs12448/conda_env
 
 pixy --stats pi fst dxy \
