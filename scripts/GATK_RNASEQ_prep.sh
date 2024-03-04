@@ -395,6 +395,6 @@ cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered
 ml GATK
 
 #gatk CountVariants -V MEVE_SNPs.filtered.allgenes_02_28.vcf.gz > gatk_num1
-gatk CountVariants -V /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/MEVE_variants.unfiltered.allgenes_02_27.vcf.gz > gatk_num2
+gatk CountVariants -V /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/MEVE_variants_unfiltered.allgenes_02_27.vcf.gz > gatk_num2
 
 
