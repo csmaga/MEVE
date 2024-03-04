@@ -386,12 +386,15 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 # --minDP 10  \
 # --recode --stdout > MEVE_invariant.vcf
 cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered
-ml BCFtools
-bcftools view -H MEVE_SNPs.filtered.allgenes_02_28.vcf.gz | wc -l > num_snps
-bcftools view -H MEVE_SNPs.filtered.vcf.gz | wc -l > num_snps2
-bcftools view -H MEVE_variants_filtered_allgenes.vcf.gz | wc -l > num_snps3
-bcftools view -H MEVE_variants_filtered_allsites.vcf.gz| wc -l > num_snps4
+#ml BCFtools
+#bcftools view -H MEVE_SNPs.filtered.allgenes_02_28.vcf.gz | wc -l > num_snps
+#bcftools view -H MEVE_SNPs.filtered.vcf.gz | wc -l > num_snps2
+#bcftools view -H MEVE_variants_filtered_allgenes.vcf.gz | wc -l > num_snps3
+#bcftools view -H MEVE_variants_filtered_allsites.vcf.gz| wc -l > num_snps4
 
+ml GATK
 
+gatk CountVariants -V MEVE_SNPs.filtered.allgenes_02_28.vcf.gz > gatk_num1
+gatk CountVariants -V MEVE_variants.unfiltered.allgenes_02_27.vcf.gz > gatk_num2
 
 
