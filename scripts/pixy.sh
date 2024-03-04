@@ -9,6 +9,9 @@
 #SBATCH --mail-user=crs12448@uga.edu
 #SBATCH --mail-type=END,FAIL
 
+ml  Miniconda3/23.5.2-0
+conda activate /home/crs12448/conda_env
+
 pixy --stats pi fst dxy \
 --vcf /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_sites_pixy.vcf.gz \
 --populations /scratch/crs12448/MEVE/PopGen/MEVE_pops.txt \
