@@ -18,4 +18,4 @@ pixy --stats pi fst dxy \
 --populations /scratch/crs12448/MEVE/PopGen/MEVE_pops.txt \
 --n_cores 4 \
 --bed_file /scratch/crs12448/MEVE/PopGen/gene_bed_sorted.bed \
---output_folder /scratch/crs12448/MEVE/PopGen
+--output_folder /scratch/crs12448/MEVE/PopGen \
