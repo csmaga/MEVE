@@ -10,6 +10,7 @@
 #SBATCH --mail-type=END,FAIL
 
 ml  Miniconda3/23.5.2-0
+ml VCFtools
 conda init bash
 conda activate /home/crs12448/conda_env
 
