@@ -11,7 +11,7 @@
 
 ml  Miniconda3/23.5.2-0
 ml VCFtools
-source ~/apps/eb/Miniconda3/23.5.2-0/etc/profile.d/conda.sh
+source /apps/eb/Miniconda3/23.5.2-0/etc/profile.d/conda.sh
 
 conda init bash
 conda activate /home/crs12448/conda_env
