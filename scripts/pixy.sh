@@ -2,7 +2,7 @@
 #SBATCH --job-name=Pixy
 #SBATCH --partition=highmem_p
 #SBATCH --ntasks=1
-#SBATCH --cpus-per-task=12
+#SBATCH --cpus-per-task=32
 #SBATCH --mem=150G
 #SBATCH --time=48:00:00
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
@@ -17,8 +17,8 @@ conda init bash
 conda activate /home/crs12448/conda_env
 
 pixy --stats pi fst dxy \
---vcf /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_sites_pixy.vcf.gz \
+--vcf /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_variants_pixy_final.vcf.gz \
 --populations /scratch/crs12448/MEVE/PopGen/MEVE_pops.txt \
---n_cores 12 \
+--n_cores 32 \
 --bed_file /scratch/crs12448/MEVE/PopGen/gene_bed_sorted.bed \
 --output_folder /scratch/crs12448/MEVE/PopGen \
