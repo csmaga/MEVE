@@ -4,7 +4,7 @@
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
 #SBATCH --mem=100G
-#SBATCH --time=48:00:00
+#SBATCH --time=12:00:00
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j
 #SBATCH --mail-user=crs12448@uga.edu
 #SBATCH --mail-type=END,FAIL
