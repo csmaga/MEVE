@@ -210,35 +210,6 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 #       --select-type-to-include SNP \
 #       -O Filtered/MEVE_variants_filtered_allgenes_PASS_02_29.vcf
 
-#  gatk SelectVariants \
-#      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
-#      -V Filtered/MEVE_variants_filtered_allgenes.vcf.gz \
-#      --select-type-to-include SNP \
-#      --select "QUAL > 30.0" \
-#      --select "QD > 2.0" \
-#      --exclude-non-variants FALSE \
-#      -O Filtered/MEVE_variants_filtered_allgenes_PASS2.vcf
-
-
-
-# cd $OUTDIR/GATK/GenotypeGVCFs/
-# # perform the filtering with vcftools
-# vcftools --gzvcf MEVE_variants_unfiltered.vcf.gz \
-# --remove-indels --maf $MAF --max-missing $MISS --minQ $QUAL \
-# --min-meanDP $MIN_DEPTH  \
-# --minDP $MIN_DEPTH --recode --stdout > $OUTDIR/GATK/GenotypeGVCFs/Filtered/MEVE_SNPs_filtered_011124.vcf
-
-## This filtering approach gives me 37,434 SNPs
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -351,40 +322,45 @@ ml GATK/4.4.0.0-GCCcore-11.3.0-Java-17
 
 
 
+# FINAL FILES
+# Unfiltered dataset
 
 
-# gatk GenotypeGVCFs -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta -V /scratch/crs12448/MEVE/GATK/CombineGVCFs/all_samples_unfiltered.g.vcf.gz -L /scratch/crs12448/MEVE/PopGen/gene_bed_sorted_sub.bed -all-sites -O sub_test.vcf
-# # 
-
-# gatk VariantFiltration -V sub_test.vcf  --filter-expression "QD < 2.0" --filter-name "QD2" \
-#    --filter-expression "QUAL < 30.0" --filter-name "QUAL30" \
-#    --filter-expression "SOR > 3.0" --filter-name "SOR3" \
-#    --filter-expression "FS > 60.0" --filter-name "FS60" \
-#    --filter-expression "MQ < 40.0" --filter-name "MQ40" \
-#    --filter-expression "MQRankSum < -12.5" --filter-name "MQRankSum-12.5" \
-#    --filter-expression "ReadPosRankSum < -8.0" --filter-name "ReadPosRankSum-8" \
-#    -O sub_test_filtered.vcf.gz
 
 
-#  gatk SelectVariants \
-#      -R /scratch/crs12448/MEVE/Genome/Amiss_ref.fasta  \
-#      -V Filtered/MEVE_variants_filtered_allgenes.vcf.gz \
-#      --exclude-non-variants FALSE \
-#      --exclude-filtered TRUE \
-#      -O sub.vcf
 
-# vcftools --vcf MEVE_variants_filtered_allgenes_PASS_02_29.vcf \
-# --max-maf 0 \
-# --max-missing 0.90 \
-# --minDP 10  \
-# --recode --stdout > MEVE_invariant.vcf
 
-# vcftools --vcf MEVE_variants_filtered_allgenes_PASS_02_29.vcf \
-# --mac 1 \
-# --maf 0.05 \
-# --max-missing 0.90 \
-# --minDP 10  \
-# --recode --stdout > MEVE_invariant.vcf
+
+
+
+
+vcftools --gzvcf MEVE_variants_filtered_allgenes_PASS_02_29.vcf.gz \
+--max-maf 0 \
+--minDP 8  \
+--minGQ 20 \
+--max-missing 0.875 \
+--recode --stdout > MEVE_invariant_final.vcf
+
+# This additional filtering (I think) gets rid of variants that are fixed for alleles that are non-reference across all individuals with genotypes
+# It basically counts the number of genotypes homozygous for alternative alleles across samples and adds that number to the # of missing genotypes across samples. 
+# If this is equal to the number of samples (48), remove that variant. This ensures that invariant sites only consist of those that match the 
+# reference genome sequence across all samples
+bcftools view -e 'COUNT(GT="AA")+COUNT(GT="mis")=N_SAMPLES' MEVE_invariant_final.vcf -O z -o MEVE_invariant_final_no_fixation.vcf.gz
+# 668,615 variants
+
+# Filtering by genotype depth of >8 and quality >20. This is based on recommendations online and from a few papers exmining these parameters and genotyping accuracy (Carson et al. 2014; Song et al. 2016)
+
+vcftools --gzvcf MEVE_variants_filtered_allgenes_PASS_02_29.vcf.gz \
+--mac 1 \
+--maf 0.05 \
+--minDP 8  \
+--minGQ 20 \
+--max-missing 0.875 \
+--recode --stdout > MEVE_variant_final.vcf
+
+
+# Need to bgzip these vcf files, then use tabix to index them before concatenating and inputting into Pixy.
+
 cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered
 #ml BCFtools
 #bcftools view -H MEVE_SNPs.filtered.allgenes_02_28.vcf.gz | wc -l > num_snps
@@ -395,6 +371,10 @@ cd /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered
 ml GATK
 
 #gatk CountVariants -V MEVE_SNPs.filtered.allgenes_02_28.vcf.gz > gatk_num1
-gatk CountVariants -V /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/MEVE_variants_unfiltered_allgenes_02_27.vcf.gz > gatk_num2
+gatk CountVariants -V /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/MEVE_variant_2.vcf > MEVE_variant_2_num.txt
+gatk CountVariants -V /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_invariant_final_no_fixation.vcf.gz
 
 
+
+bcftools view -r NW_017713709.1:15365894-15466436 MEVE_variant.vcf.gz
+gatk CountVariants -V /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/MEVE_variants_filtered_allgenes_PASS_02_29.vcf.gz > MEVE_variants_filtered_allgenes_PASS_02_29_num.txt
