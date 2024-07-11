@@ -40,7 +40,7 @@ txdb
 #transcript_lengths
 
 # Extract all cds by gene
-cds_by_gene<-cdsBy(txdb, by="gene", use.names=TRUE)
+cds_by_gene<-cdsBy(txdb, by="gene")
 cds_by_gene
 
 write.csv(cds_by_gene, "cds_by_gene.csv")
