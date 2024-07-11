@@ -32,14 +32,26 @@ txdb
 
 #
 # # Extract all exons grouped within genes - code from MDH and SLB
-exons_by_genes <- exonsBy(txdb, by="gene")
-exons_by_genes
-write.csv(exons_by_genes, "exons_by_genes.csv")
+#exons_by_genes <- exonsBy(txdb, by="gene")
+#exons_by_genes
+#write.csv(exons_by_genes, "exons_by_genes.csv")
 
-transcript_lengths <- transcripts(txdb)
-transcript_lengths
-#
-write.csv(transcript_lengths, "transcript_lengths.csv")
+#transcript_lengths <- transcripts(txdb)
+#transcript_lengths
+
+# Extract all cds by gene
+cds_by_gene<-cdsBy(txdb, by="gene", use.names=TRUE)
+cds_by_gene
+
+write.csv(cds_by_gene, "cds_by_gene.csv")
+
+cds_seqs <- extractTranscriptSeqs("/scratch/crs12448/MEVE/Genome/Amiss_ref.fasta", cds)
+cds_seqs
+
+write.csv(cds_seqs, "cds_seqs.csv")
+
+
+
 #gene_counts <- summarizeOverlaps(features=exons_by_genes, reads=BAM_files, mode="Union", singleEnd=FALSE, ignore.strand=FALSE, fragments=TRUE)
 #gene_counts
 
