@@ -15,4 +15,4 @@ ml R/4.3.1-foss-2022a
 
 export R_LIBS=/home/crs12448/R/x86_64-pc-linux-gnu-library/4.3
 
-R CMD BATCH ~/GenomicFeatures_count_reads.R
+R CMD BATCH ~/MEVE/scripts/GenomicFeatures_count_reads.R
