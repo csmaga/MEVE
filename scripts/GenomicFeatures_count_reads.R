@@ -1,11 +1,11 @@
- # if (!require("BiocManager", quietly = TRUE))
- #     install.packages("BiocManager")
- # 
- # BiocManager::install("GenomicFeatures")
- # if (!require("BiocManager", quietly = TRUE))
- #     install.packages("BiocManager")
- # 
- # BiocManager::install("GenomicAlignments")
+ if (!require("BiocManager", quietly = TRUE))
+     install.packages("BiocManager")
+ 
+ BiocManager::install("GenomicFeatures")
+ if (!require("BiocManager", quietly = TRUE))
+     install.packages("BiocManager")
+
+ BiocManager::install("GenomicAlignments")
 
 
 library(GenomicAlignments)
