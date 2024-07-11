@@ -40,10 +40,10 @@ txdb
 #transcript_lengths
 
 # Extract all cds by gene
-cds_by_gene<-cdsBy(txdb, by="tx", use.names=TRUE)
-cds_by_gene
+cds<-cdsBy(txdb, by="tx", use.names=TRUE)
+cds
 
-write.csv(cds_by_gene, "cds_by_gene.csv")
+write.csv(cds, "cds.csv")
 
 cds_seqs <- extractTranscriptSeqs("/scratch/crs12448/MEVE/Genome/Amiss_ref.fasta", cds)
 cds_seqs
