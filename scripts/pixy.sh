@@ -17,8 +17,9 @@ conda init bash
 conda activate /home/crs12448/conda_env
 
 pixy --stats pi fst dxy \
---vcf /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/MEVE_sites_pixy.vcf.gz \
+--vcf /scratch/crs12448/MEVE/GATK/GenotypeGVCFs/Filtered/FinalFiles/MEVE_sites_pixy_final.vcf.gz \
 --populations /scratch/crs12448/MEVE/PopGen/MEVE_pops.txt \
 --n_cores 12 \
 --bed_file /scratch/crs12448/MEVE/PopGen/gene_bed_sorted.bed \
 --output_folder /scratch/crs12448/MEVE/PopGen \
+--output_prefix 20240827_
