@@ -45,7 +45,7 @@ echo
 echo 'directory created.'
 echo
 
-fastqc -o $OUTDIR/RawReadQC -t 10 $OUTDIR/${sample}/*.fastq
+fastqc -o $OUTDIR/RawReadQC -t 10 $OUTDIR/${sample}*.fastq
 
 echo 
 echo 'Trimming raw reads...'
