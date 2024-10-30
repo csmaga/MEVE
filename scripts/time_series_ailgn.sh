@@ -13,7 +13,7 @@
 cd /scratch/crs12448/MEVE/TimeSeries
 
 sample=$(awk "NR==${SLURM_ARRAY_TASK_ID}" /scratch/crs12448/MEVE/TimeSeries/sample_names.txt)
-OUTDIR="/sratch/crs12448/MEVE/TimeSeries"
+OUTDIR="/scratch/crs12448/MEVE/TimeSeries"
 ## make project directory + make directory for ref genome
 
 echo 'Project directory = ' $OUTDIR
