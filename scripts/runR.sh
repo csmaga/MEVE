@@ -2,7 +2,7 @@
 #SBATCH --job-name=AP_WO	                        # Job name
 #SBATCH --partition=highmem_p	                            # Partition (queue) name
 #SBATCH --ntasks=1			                                # Single task job
-#SBATCH --cpus-per-task=4		                            # Number of cores per task - match this to the num_threads used by BLAST
+#SBATCH --cpus-per-task=8		                            # Number of cores per task - match this to the num_threads used by BLAST
 #SBATCH --mem=400gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j	    # Standard output and error log - # replace cbergman with your myid
@@ -11,8 +11,9 @@
 
 cd /scratch/crs12448/MEVE/R
 
-ml R/4.3.1-foss-2022a
+#ml R/4.3.1-foss-2022a
+ml R/4.4.1-foss-2022b
 
-export R_LIBS=/home/crs12448/R/x86_64-pc-linux-gnu-library/4.3
+export R_LIBS=/home/crs12448/R/x86_64-pc-linux-gnu-library/4.4
 
-R CMD BATCH ~/MEVE/scripts/splicing_overlaps.R
+R CMD BATCH ~/MEVE/scripts/alt_splicing_R.R
