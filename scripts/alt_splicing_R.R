@@ -15,7 +15,7 @@ colData(dxd)
 head( counts(dxd), 5 )
 dxd = estimateSizeFactors(dxd)
 
-BPPARAM = MultiCoreParam(8)
+BPPARAM = MulticoreParam(8)
 dxd = estimateDispersions( dxd, BPPARAM=BPPARAM )
 
 dxd = testForDEU( dxd,BPPARAM=BPPARAM )
