@@ -9,8 +9,6 @@
 #SBATCH --mail-user=crs12448@uga.edu
 #SBATCH --mail-type=END,FAIL
 
-
-ml python
 ml rMATS-turbo/4.1.1-foss-2020b
 
-rmats.py --b1 southern_pops.txt --b2 northern_pops.txt --gtf /scratch/crs12448/GATOR_GENOME/Amiss.annot.2022.gff -t paired --readLength 150 --nthread 8 --od /scratch/crs12448/MEVE/rmats/results --tmp /scratch/crs12448/MEVE/rmats/temp
+rmats.py --b1 southern_pops.txt --b2 northern_pops.txt --gtf /scratch/crs12448/GATOR_GENOME/Amiss.annot.2022.gff -t paired --readLength 150 --libType fr-firststrand --nthread 8 --od /scratch/crs12448/MEVE/rmats/results --tmp /scratch/crs12448/MEVE/rmats/temp
