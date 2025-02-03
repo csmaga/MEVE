@@ -13,7 +13,7 @@ library(GenomicFeatures)
 
 # Change directory to where the BAM files are 
 
-setwd("/scratch/crs12448/MEVE/Genome")
+setwd("/scratch/crs12448/MEVE/TimeSeries/Alignment/HISAT2/BAM")
 
 all_samples <- c("DRR048609.bam", "DRR048610.bam", "DRR048611.bam", "DRR048612.bam ", "DRR048613.bam", "DRR048614.bam", "DRR048615.bam", " DRR048616.bam", "  DRR048617.bam ",
                "DRR048618.bam ", "DRR048619.bam", "DRR048620.bam", "DRR048621.bam", "DRR048622.bam", "DRR048623.bam", "DRR048624.bam", "DRR048625.bam", "DRR048626.bam", "DRR048627.bam", "DRR048628.bam",
