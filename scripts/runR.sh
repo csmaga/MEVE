@@ -3,7 +3,7 @@
 #SBATCH --partition=highmem_p	                            # Partition (queue) name
 #SBATCH --ntasks=1			                                # Single task job
 #SBATCH --cpus-per-task=8		                            # Number of cores per task - match this to the num_threads used by BLAST
-#SBATCH --mem=400gb			                                # Total memory for job
+#SBATCH --mem=300gb			                                # Total memory for job
 #SBATCH --time=48:00:00  		                            # Time limit hrs:min:sec
 #SBATCH --output=/scratch/crs12448/MEVE/Logs/log.%j	    # Standard output and error log - # replace cbergman with your myid
 #SBATCH --mail-user=christopher.smaga@uga.edu                    # Where to send mail - # replace cbergman with your myid
