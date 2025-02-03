@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --job-name=AP_WO	                        # Job name
+#SBATCH --job-name=timeseries_count	                        # Job name
 #SBATCH --partition=highmem_p	                            # Partition (queue) name
 #SBATCH --ntasks=1			                                # Single task job
 #SBATCH --cpus-per-task=8		                            # Number of cores per task - match this to the num_threads used by BLAST
@@ -11,9 +11,9 @@
 
 cd /scratch/crs12448/MEVE/R
 
-#ml R/4.3.1-foss-2022a
-ml R/4.4.1-foss-2022b
+ml R/4.3.1-foss-2022a
+#ml R/4.4.1-foss-2022b
 
-export R_LIBS=/home/crs12448/R/x86_64-pc-linux-gnu-library/4.4
+export R_LIBS=/home/crs12448/R/x86_64-pc-linux-gnu-library/4.3
 
-R CMD BATCH ~/MEVE/scripts/alt_splicing_R.R
+R CMD BATCH ~/MEVE/scripts/GenomicFeatures_count_reads_timeseries.R
