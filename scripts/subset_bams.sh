@@ -20,5 +20,7 @@ ml SAMtools/1.18-GCC-12.3.0
 
 
 for file in *.bam; do
-  samtools view ${file} "NW_017713108.1:30798-33207" > /scratch/crs12448/MEVE/Alignment/HISAT2/BAM/gene_bams/cyp1b1/cyp1b1_${file}
+  samtools view -h ${file} NW_017713108.1:30798-33207  -b -o /scratch/crs12448/MEVE/Alignment/HISAT2/BAM/gene_bams/cyp1b1/cyp1b1_${file}
 done
+
+samtools index -M /scratch/crs12448/MEVE/Alignment/HISAT2/BAM/gene_bams/cyp1b1/*.bam
