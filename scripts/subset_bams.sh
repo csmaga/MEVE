@@ -13,6 +13,12 @@
 cd /scratch/crs12448/MEVE/Alignment/HISAT2/BAM
 ml SAMtools/1.18-GCC-12.3.0
 
+# for file in *.bam; do
+#   samtools view ${file} "NW_017708899.1:4382450-4395344" > /scratch/crs12448/MEVE/Alignment/HISAT2/BAM/gene_bams/aig1_${file}
+# done
+
+
+
 for file in *.bam; do
-  samtools view ${file} "NW_017708899.1:4382450-4395344" > /scratch/crs12448/MEVE/Alignment/HISAT2/BAM/gene_bams/aig1_${file}
+  samtools view ${file} "NW_017713108.1:30798-33207" > /scratch/crs12448/MEVE/Alignment/HISAT2/BAM/gene_bams/cyp1b1_${file}
 done
